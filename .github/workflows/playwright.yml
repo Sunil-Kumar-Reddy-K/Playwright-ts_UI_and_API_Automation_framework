@@ -1,0 +1,83 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    # Run every Monday and Thursday at 5 AM IST (11:30 PM UTC)
+    - cron: '30 23 * * 0,3'
+
+jobs:
+  ui-tests:
+    name: Run UI Playwright Tests
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.47.0-jammy  # Using Playwright Docker image
+    timeout-minutes: 60
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Cache Node.js modules
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Install dependencies
+      run: npm ci
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps
+    - name: Run UI Playwright tests
+      run: npx playwright test --grep @UI --project=chromium  # Running tests with UI tag
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ui-playwright-report
+        path: playwright-report/
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: ui-failed-test-artifacts
+        path: path/to/failure/screenshots
+        retention-days: 30
+
+  api-tests:
+    name: Run API Playwright Tests
+    runs-on: ubuntu-latest
+    container:
+      image: node:lts  # You can use a lightweight Node.js container for API tests
+    timeout-minutes: 60
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: lts/*
+    - name: Cache Node.js modules
+      uses: actions/cache@v4
+      with:
+        path: ~/.npm
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Install dependencies
+      run: npm ci
+    - name: Run API Playwright tests
+      run: npx playwright test --grep @API --project=chromium  # Running tests with API tag
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: api-playwright-report
+        path: playwright-report/
+        retention-days: 30
+    - uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: api-failed-test-artifacts
+        path: path/to/failure/screenshots
+        retention-days: 30
