@@ -61,6 +61,9 @@ $env:LOG_LEVEL = "debug"; npx playwright test
 ```
 #### To run a specific spec:
 ```bash
+$env:LOG_LEVEL = "debug"; npx playwright test  tests/green_kart_application_UI/gk_orderMultipleProducts.spec.ts --project=chromium --headed
+```
+```bash
 $env:LOG_LEVEL = "debug"; npx playwright test tests/grocery-store-api/gs_e2eFlow-api.spec.ts --project=chromium 
 ```
 ## Viewing Test Reports
@@ -68,3 +71,31 @@ After the GitHub Actions workflow runs, test reports are uploaded as an artifact
 
 sample:
 ![alt text](image.png)
+
+# Code styling and linting assistant
+Implemented ESLint and Prettier to ensure code quality and consistency.
+
+### ESLint
+To see all the linting issues, run:
+``` bash
+npx eslint tests 
+```
+Additionally, installing the Error Lens extension in your code editor will highlight errors directly in the file before even running the command.
+
+To fix the fixables we can use 
+``` bash
+npx eslint tests --fix
+```
+
+### Prettier
+To format a specific file, use:
+``` bash 
+npx prettier tests/interview/medium.spec.ts --write
+```
+To format all files in the tests directory, use:
+``` bash 
+npx prettier tests --write
+```
+
+# to start or include 
+> Zero_step
