@@ -19,7 +19,7 @@ test.describe.serial('Products API Tests', () => {
             expect(Array.isArray(responseBody)).toBe(true)
             expect(responseBody.length).toBeGreaterThan(0)
             productId = responseBody[0].id
-        }
+        },
     )
 
     test(
@@ -27,7 +27,7 @@ test.describe.serial('Products API Tests', () => {
         { tag: '@API' },
         async ({ request }) => {
             const response = await request.get(
-                `${baseUrl}/products/${productId}`
+                `${baseUrl}/products/${productId}`,
             )
 
             expect(response.status()).toBe(200)
@@ -39,6 +39,6 @@ test.describe.serial('Products API Tests', () => {
             expect(responseBody).toHaveProperty('id', productId)
             expect(responseBody).toHaveProperty('name')
             expect(responseBody).toHaveProperty('price')
-        }
+        },
     )
 })

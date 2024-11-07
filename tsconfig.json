@@ -7,7 +7,7 @@
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true
     },
-    "include": ["tests/**/*.ts", "eslint.config.mjs"],
+    "include": ["tests/**/*.ts", "eslint.config.mjs", "playwright.config.ts", "custom-reporter.ts"],
     "exclude": ["node_modules"]
   }
   

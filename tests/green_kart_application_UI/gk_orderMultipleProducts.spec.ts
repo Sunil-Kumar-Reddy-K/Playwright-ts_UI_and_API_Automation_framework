@@ -18,5 +18,5 @@ test(
         await cart.clickOnPlaceOrderButton()
         await cart.selectCountryFomDropDownAndProceed('India')
         await cart.assertForSuccessfulOrder()
-    }
+    },
 )

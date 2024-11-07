@@ -19,7 +19,7 @@ test.describe.parallel('Add products to the cart and place order', () => {
                 await cart.clickOnPlaceOrderButton()
                 await cart.selectCountryFomDropDownAndProceed('India')
                 await cart.assertForSuccessfulOrder()
-            }
+            },
         )
     }
 })
