@@ -97,5 +97,12 @@ To format all files in the tests directory, use:
 npx prettier tests --write
 ```
 
+## Acknowledgments:
+
+* This implementation of TypeScript code styling and linting was inspired by Thananjayan's article on Medium .
+   > https://medium.com/@thananjayan1988/typescript-code-styling-and-linting-assistant-93ff67557b1c
+
+
+
 # to start or include 
 > Zero_step
