@@ -13,6 +13,8 @@ jobs:
   ui-tests:
     name: Run UI Playwright Tests
     runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_GREENKART_URL}}
     container:
       image: mcr.microsoft.com/playwright:v1.47.0-jammy  # Using Playwright Docker image
     timeout-minutes: 60
@@ -44,8 +46,18 @@ jobs:
       if: failure()
       with:
         name: ui-failed-test-artifacts
-        path: path/to/failure/screenshots
+        path: path/to/failure/screenshots/
         retention-days: 30
+
+            # Send Slack notification after the UI tests
+    - name: Send Slack notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+        SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
+        SLACK_USERNAME: Playwright GitHub Actions
+        SLACK_MESSAGE: "UI Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}."
+      if: always()
 
   api-tests:
     name: Run API Playwright Tests
@@ -79,5 +91,15 @@ jobs:
       if: failure()
       with:
         name: api-failed-test-artifacts
-        path: path/to/failure/screenshots
+        path: path/to/failure/screenshots/
         retention-days: 30
+
+            # Send Slack notification after the API tests
+    - name: Send Slack notification
+      uses: rtCamp/action-slack-notify@v2
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+        SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
+        SLACK_USERNAME: Playwright GitHub Actions
+        SLACK_MESSAGE: "API Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}."
+      if: always()

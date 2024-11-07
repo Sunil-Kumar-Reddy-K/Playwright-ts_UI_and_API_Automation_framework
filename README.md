@@ -107,7 +107,7 @@ npx prettier tests --write
 # to start or include 
 > Zero_step
 > azure pipeline
-> slack notification
+> slack notification , also add the content for implementation in the readme 
 
 ### Commands I normally use 
 ``` bash
