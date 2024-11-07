@@ -45,13 +45,13 @@ test.describe.serial('E2E API Tests', () => {
                     productId: productId,
                     quantity: 2,
                 },
-            }
+            },
         )
 
         expect(addItemResponse.status()).toBe(201)
         const addItemResponseBody = await addItemResponse.json()
         logger.debug(
-            'Item Added to Cart:' + JSON.stringify(await addItemResponseBody)
+            'Item Added to Cart:' + JSON.stringify(await addItemResponseBody),
         )
         const itemId = addItemResponseBody.itemId
         expect(itemId).toBeDefined()
@@ -90,7 +90,7 @@ test.describe.serial('E2E API Tests', () => {
         expect(orderResponse.status()).toBe(201)
         const orderResponseBody = await orderResponse.json()
         logger.info(
-            'New Order Created:' + JSON.stringify(await orderResponseBody)
+            'New Order Created:' + JSON.stringify(await orderResponseBody),
         )
 
         orderId = orderResponseBody.orderId

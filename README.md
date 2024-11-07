@@ -70,7 +70,7 @@ $env:LOG_LEVEL = "debug"; npx playwright test tests/grocery-store-api/gs_e2eFlow
 After the GitHub Actions workflow runs, test reports are uploaded as an artifact named playwright-report. You can view and download the reports by navigating to the workflow run details and accessing the playwright-report artifact.
 
 sample:
-![alt text](image.png)
+![alt text](documents/image.png)
 
 # Code styling and linting assistant
 Implemented ESLint and Prettier to ensure code quality and consistency.
@@ -108,3 +108,16 @@ npx prettier tests --write
 > Zero_step
 > azure pipeline
 > slack notification
+
+### Commands I normally use 
+``` bash
+$env:LOG_LEVEL = "debug"; npx playwright test tests/playwright_utube/dynamicContent_APImocking.spec.ts --project=chromium --headed --ui
+
+$env:LOG_LEVEL = "debug"; npx eslint tests/grocery-store-api/gs_e2eFlow-api.spec.ts
+
+$env:LOG_LEVEL = "debug"; npx playwright test tests/medium/mastering-fixtures-inside.spec.ts --project=chromium --headed --workers=1
+
+$env:LOG_LEVEL = "debug"; npx playwright test tests/checkly_utube/timer_control.spec.ts --project=chromium --headed --debug
+
+$env:LOG_LEVEL = "debug"; npx playwright test tests/automation_using_tessaract_js/rs_logoRead.spec.ts --project=chromium --headed
+```

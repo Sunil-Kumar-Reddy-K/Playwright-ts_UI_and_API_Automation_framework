@@ -6,3 +6,4 @@ node_modules/
 tests-examples/
 combined.log
 tests/interview
+eng.traineddata

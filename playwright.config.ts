@@ -1,4 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
+import moment from "moment";
+
+// Generate a timestamp for unique report folder names
+const timestamp = moment().format("YYYY-MM-DD_HH-mm-ss");
 
 /**
  * Read environment variables from file.
@@ -21,7 +25,7 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 3 : 3,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [["html"],["blob"]],
+  reporter: [ ["html", { outputFolder: `playwright-report/html-reports/report_${timestamp}` }],['./custom-reporter.ts']],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */

@@ -13,5 +13,5 @@ test(
         const responseBody = await response.json()
         // logger.info(JSON.stringify(responseBody));
         expect(responseBody.status).toBe('UP')
-    }
+    },
 )
