@@ -1,5 +1,12 @@
 import { defineConfig, devices } from "@playwright/test";
+import { defineBddConfig, defineBddProject } from 'playwright-bdd';
 import moment from "moment";
+
+const testDir = defineBddConfig({
+  language: 'en',
+  features: "features/**.feature",
+  steps: "features/steps/**.ts",
+});
 
 // Generate a timestamp for unique report folder names
 const timestamp = moment().format("YYYY-MM-DD_HH-mm-ss");
@@ -35,16 +42,35 @@ export default defineConfig({
     trace: "on",
   },
 
+  snapshotPathTemplate: '__snapshots__/{testFileDir}/{testFileName}-snapshots/{arg}{-projectName}{-snapshotSuffix}{ext}',
+
+
   /* Configure projects for major browsers */
   projects: [
     {
       name: "chromium",
+      testDir: "./tests",
+
       use: { ...devices["Desktop Chrome"] },
     },
 
     {
       name: "firefox",
       use: { ...devices["Desktop Firefox"] },
+    },
+
+    {
+      name: "bdd_chromium",
+      testDir,
+      use: { ...devices["Desktop Chrome"] },
+    },
+
+    {
+      ...defineBddProject({
+        name: 'Project_01',
+        features: 'project-one/*.feature',
+        steps: 'project-one/steps/*.ts',
+      }),
     },
 
     // {

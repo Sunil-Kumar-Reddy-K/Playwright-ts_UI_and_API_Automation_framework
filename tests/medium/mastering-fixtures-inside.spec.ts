@@ -1,5 +1,5 @@
-import base from '../../fixtures/basepage'
-import { TodoPage } from '../../pages/todo.page'
+import base from '../../features/steps/basepage';
+import { TodoPage } from '../../pages/todo.page';
 
 const test = base.extend<{ todoPage: TodoPage }>({
     todoPage: async ({ page }, use) => {
