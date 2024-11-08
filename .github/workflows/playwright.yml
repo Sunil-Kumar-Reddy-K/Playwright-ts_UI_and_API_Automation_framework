@@ -126,8 +126,7 @@ jobs:
       run: npm ci
     - name: Run BDD Tests
       run: |
-        npx bddgen --tags "@BDD"
-        npx playwright test --project=bdd_chromium
+        npx bddgen --tags "@BDD" && npx playwright test --project=bdd_chromium
     - name: Upload BDD Test Report
       uses: actions/upload-artifact@v4
       if: always()
