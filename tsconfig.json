@@ -8,6 +8,6 @@
       "forceConsistentCasingInFileNames": true
     },
     "include": ["tests/**/*.ts", "eslint.config.mjs", "playwright.config.ts", "custom-reporter.ts", "features/steps/**.ts"],
-    "exclude": ["node_modules"]
+    "exclude": ["node_modules", ".features-gen"]
   }
   
