@@ -44,14 +44,29 @@ jobs:
           name: ui-playwright-report
           path: playwright-report/
           retention-days: 30
-      - name: Upload HTML Report to Slack
+
+      # List Playwright Report Directory for Debugging
+      - name: List Playwright Report Directory
+        run: ls -R playwright-report/
+
+      # Check for Report File and Upload to Slack if Exists
+      - name: Check for Report File and Upload to Slack
         run: |
-          REPORT_PATH=$(ls playwright-report/html-report/report*/index.html | head -n 1)
+          REPORT_PATH=$(ls playwright-report/html-reports/report_*/index.html 2>/dev/null | head -n 1)
+          if [ -z "$REPORT_PATH" ]; then
+            echo "Report file not found!"
+            exit 1
+          fi
+
+          echo "Report file found at: $REPORT_PATH"
+          
           curl -F file=@$REPORT_PATH \
                -F "initial_comment=Here is the UI test report" \
                -F channels="#automate_greenkart_using_playwright_ts_api-run_report" \
                -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
                https://slack.com/api/files.upload
+
+      # Notify Slack for UI Test Results (if needed)
       - name: Notify Slack for UI Test Results
         uses: rtCamp/action-slack-notify@v2
         env:
@@ -80,12 +95,13 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
+          restore-keys:
             ${{ runner.os }}-node-
       - name: Install Dependencies
         run: npm ci
       - name: Run API Tests
         run: npx playwright test --grep @API --project=chromium
+      
       - name: Upload API Test Report
         uses: actions/upload-artifact@v4
         if: always()
@@ -93,33 +109,48 @@ jobs:
           name: api-playwright-report
           path: playwright-report/
           retention-days: 30      
-      - name: Upload HTML Report to Slack
+
+      # List Playwright Report Directory for Debugging (API)
+      - name: List Playwright Report Directory (API)
+        run: ls -R playwright-report/
+
+      # Check for Report File and Upload to Slack if Exists (API)
+      - name: Check for Report File and Upload to Slack (API)
         run: |
-          REPORT_PATH=$(ls playwright-report/html-report/report*/index.html | head -n 1)
+          REPORT_PATH=$(ls playwright-report/html-reports/report_*/index.html 2>/dev/null | head -n 1)
+          if [ -z "$REPORT_PATH" ]; then
+            echo "Report file not found!"
+            exit 1
+          fi
+
+          echo "Report file found at: $REPORT_PATH"
+          
           curl -F file=@$REPORT_PATH \
                -F "initial_comment=Here is the API test report" \
                -F channels="#automate_greenkart_using_playwright_ts_api-run_report" \
                -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
                https://slack.com/api/files.upload      
-      - name: Notify Slack for API Test Results
+
+      # Notify Slack for API Test Results (if needed)
+      - name: Notify Slack for API Test Results (if needed)
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
           SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
           SLACK_USERNAME: Playwright GitHub Actions
           SLACK_MESSAGE: "API Test results are available! Check the attached report."
-        if: always()
+        if : always()
 
   bdd-tests:
     name: Execute BDD Playwright Tests
-    runs-on: ubuntu-latest 
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-      SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}  # Add your bot token here 
-    container:
-      image: mcr.microsoft.com/playwright:v1.47.0-jammy 
-    timeout-minutes: 60 
-    steps:
+    runs-on : ubuntu-latest 
+    env :
+      SLACK_WEBHOOK_URL : ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+      SLACK_BOT_TOKEN : ${{ secrets.SLACK_BOT_TOKEN }}  # Add your bot token here 
+    container :
+      image : mcr.microsoft.com/playwright:v1.47.0-jammy 
+    timeout-minutes : 60 
+    steps :
       - uses : actions/checkout@v4 
       - uses : actions/setup-node@v4 
         with :
@@ -131,17 +162,23 @@ jobs:
           key : ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }} 
           restore-keys :
             ${{ runner.os }}-node-
+      
       - name : Install Dependencies 
         run : npm ci 
+      
       - name : Install Playwright Browsers 
         run : npx playwright install --with-deps 
+
       - name : Generate BDD Files 
-        run : npx bddgen --tags "@BDD" 
+        run : npx bddgen --tags "@BDD"
+
       - name : Check if BDD Features File Exists 
         run : |
             if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi    
+
       - name : Run Playwright Tests with Verbose Logging 
         run : npx playwright test --project=bdd_chromium 
+
       - name : Upload BDD Test Report 
         uses : actions/upload-artifact@v4 
         if : always() 
@@ -149,19 +186,34 @@ jobs:
            name : bdd-playwright-report 
            path : playwright-report/ 
            retention-days : 30 
-      - name : Upload HTML Report to Slack 
+
+       # List Playwright Report Directory for Debugging (BDD)
+      - name : List Playwright Report Directory (BDD)
+        run : ls -R playwright-report/
+
+       # Check for Report File and Upload to Slack if Exists (BDD)
+      - name : Check for Report File and Upload to Slack (BDD) 
         run : |
-            REPORT_PATH=$(ls playwright-report/html-report/report*/index.html | head -n 1)
-            curl -F file=@$REPORT_PATH \
-                 -F "initial_comment=Here is the BDD test report" \
-                 -F channels="#automate_greenkart_using_playwright_ts_api-run_report" \
-                 -H "Authorization: Bearer $SLACK_BOT_TOKEN" \
-                 https://slack.com/api/files.upload      
+             REPORT_PATH=$(ls playwright-report/html-reports/report_*/index.html 2>/dev/null | head -n 1)
+             if [ -z "$REPORT_PATH" ]; then
+               echo "Report file not found!"
+               exit 1
+             fi
+
+             echo "Report file found at:$REPORT_PATH"
+             
+             curl -F file=@$REPORT_PATH \
+                  -F "initial_comment=Here is the BDD test report" \
+                  -F channels="#automate_greenkart_using_playwright_ts_api-run_report" \
+                  -H "Authorization Bearer $SLACK_BOT_TOKEN" \
+                  https://slack.com/api/files.upload      
+
+       # Notify Slack for BDD Test Results (if needed)
       - name : Notify Slack for BDD Test Results 
         uses : rtCamp/action-slack-notify@v2 
         env :
            SLACK_WEBHOOK : ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }} 
            SLACK_CHANNEL : "#automate_greenkart_using_playwright_ts_api-run_report" 
            SLACK_USERNAME : Playwright GitHub Actions 
-           SLACK_MESSAGE : "BDD Test results are available! Check the attached report." 
+           SLACK_MESSAGE : "BDD Test results are available! Check the attached report."  
         if : always()
