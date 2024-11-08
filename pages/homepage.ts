@@ -3,7 +3,7 @@ import { expect, Locator, Page } from "@playwright/test";
 export class Homepage {
   readonly page: Page;
   private readonly searchInputBox: Locator;
-  private readonly searchIcon: Locator;
+  readonly searchIcon: Locator;
   private readonly addToCart: Locator;
   private readonly cart: Locator;
   private readonly items: Locator;
