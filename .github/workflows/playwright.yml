@@ -122,12 +122,17 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-            
+
     - name: Install Dependencies
       run: npm ci
 
     - name: Generate BDD Files
       run: npx bddgen --tags "@BDD"
+
+    - name: Check if BDD Features File Exists
+      run: |
+        if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi
+    
 
     - name: Run Playwright Tests
       run: npx playwright test --project=bdd_chromium
