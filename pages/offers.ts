@@ -2,9 +2,9 @@ import { Locator, Page } from "@playwright/test";
 
 export class Cart {
   readonly page: Page;
-  readonly promoCode: Locator;
-  readonly apply: Locator;
-  readonly placeOrder: Locator;
+  private readonly promoCode: Locator;
+  private readonly apply: Locator;
+  private readonly placeOrder: Locator;
 
   constructor(page: Page) {
     this.page = page;

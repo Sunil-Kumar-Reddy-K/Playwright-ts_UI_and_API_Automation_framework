@@ -2,15 +2,14 @@ import { expect, Locator, Page } from "@playwright/test";
 
 export class Homepage {
   readonly page: Page;
-  readonly searchInputBox: Locator;
-  readonly searchIcon: Locator;
-  readonly addToCart: Locator;
-  readonly cart: Locator;
-  readonly items: Locator;
-  readonly price: Locator;
-  readonly numberOfItemsOnCart: Locator;
-  readonly proceedToCheckout: Locator;
-  readonly numberOfProducts: Locator;  
+  private readonly searchInputBox: Locator;
+  private readonly searchIcon: Locator;
+  private readonly addToCart: Locator;
+  private readonly cart: Locator;
+  private readonly items: Locator;
+  private readonly price: Locator;
+  private readonly numberOfItemsOnCart: Locator;
+  private readonly proceedToCheckout: Locator;
 
   constructor(page: Page) {
     this.page = page;

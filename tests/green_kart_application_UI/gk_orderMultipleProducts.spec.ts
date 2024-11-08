@@ -1,4 +1,4 @@
-import test from '../../fixtures/basepage'
+import test from '../../features/steps/basepage';
 
 test.beforeEach(async ({ page }) => {
     await page.goto('/seleniumPractise/#')

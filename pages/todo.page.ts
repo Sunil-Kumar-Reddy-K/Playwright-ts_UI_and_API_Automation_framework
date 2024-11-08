@@ -2,9 +2,9 @@ import { Locator, Page } from "@playwright/test";
 
 export class TodoPage {
   readonly page: Page;
-  readonly inputTodo: Locator;
-  readonly delete: Locator;
-  readonly checkBoxes: Locator;
+  private readonly inputTodo: Locator;
+  private readonly delete: Locator;
+  private readonly checkBoxes: Locator;
 
   constructor(page: Page) {
     this.page = page;

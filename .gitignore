@@ -7,3 +7,7 @@ tests-examples/
 combined.log
 tests/interview
 eng.traineddata
+zerostep.config.json
+
+# BDD
+**/.features-gen/**/*.spec.js

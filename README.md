@@ -36,10 +36,23 @@ This project automates testing for:
 
 ### Simple Grocery Store API
 This API, described in detail [here](https://github.com/vdespa/Postman-Complete-Guide-API-Testing/blob/main/simple-grocery-store-api.md), supports a simple grocery store's functionality. The automation scripts cover various endpoints, including status checks, cart creation, adding products, authorization, and placing orders.
+## Framework Approaches
+
+This framework supports three distinct approaches to running tests:
+
+1. **Regular Playwright Tests**: This is the traditional method where tests are executed using the Playwright test framework along with the Page Object Model (POM).
+
+2. **Playwright Zero-Step AI**: This approach incorporates AI-driven tests. More details regarding the implementation and usage can be found in the `documents` folder of the repository.
+
+3. **BDD Approach**: To implement Behavior Driven Development (BDD), we have followed the guidance provided in the [Playwright BDD documentation](https://vitalets.github.io/playwright-bdd/#/getting-started/index) and the [playwright-bdd-example GitHub repository](https://github.com/vitalets/playwright-bdd-example).
+
+## Winston Library Logging and Debugging
+
+This project utilizes the Winston library for logging purposes. Both `debug` and `info` level logs are supported, allowing you to capture different levels of detail based on your needs.
 
 ## Test Coverage
 
-### UI Automation
+### UI Automation 👨‍💻
 For the Green Kart web application, the following scenarios are automated:
 
 - **Health Check**: Basic health check to ensure the application is up and running.
@@ -47,7 +60,7 @@ For the Green Kart web application, the following scenarios are automated:
 - **Place Order for One Product**: Add a single product to the cart and proceed to checkout.
 - **Place Order for Multiple Products**: Add multiple products to the cart and proceed to checkout.
 
-### API Automation
+### API Automation 🧑‍🍳
 For the Simple Grocery Store API, the following test scenarios are automated:
 
 - **Status Check**: Check the status of the API to ensure it is operational.
@@ -58,19 +71,31 @@ For the Simple Grocery Store API, the following test scenarios are automated:
 
 ## How to Run Tests
 
-### Without Debug Logs
-```powershell
-$env:LOG_LEVEL = "info"; npx playwright test
-```
-### With Debug Logs
+> ### Without Debug Logs
+   ```powershell
+   $env:LOG_LEVEL = "info"; npx playwright test
+   ```
+> ### With Debug Logs
 ```powershell
 $env:LOG_LEVEL = "debug"; npx playwright test
 ```
-### Running Specific Spec
+> ### Running Specific Spec
 ```powershell
 $env:LOG_LEVEL = "debug"; npx playwright test tests/green_kart_application_UI/gk_orderMultipleProducts.spec.ts --project=chromium --headed
 ```
-## Viewing Test Reports
+
+## Zero-Step Integration 🤖
+Implemented ZeroStep in this repository to enhance Playwright testing capabilities with AI functionalities. ZeroStep allows supercharge tests by utilizing AI-driven commands that can interact with web pages intelligently.
+
+For more information on how to set up ZeroStep in  project, please refer to official GitHub repository: [ZeroStep GitHub Repository](https://github.com/zerostep-ai/zerostep)
+
+## How to Run the BDD tests
+
+```powershell
+npx bddgen --tags "@BDD"; npx playwright test --project=bdd_chromium --workers=1 --headed 
+```
+
+## Viewing Test Reports 📂
 After the GitHub Actions workflow runs, test reports are uploaded as an artifact named playwright-report. You can view and download the reports by navigating to the workflow run details and accessing the playwright-report artifact.
 
 sample:
@@ -79,7 +104,7 @@ sample:
 # Code styling and linting assistant
 Implemented ESLint and Prettier to ensure code quality and consistency.
 
-### ESLint
+### ESLint 🧵
 To see all the linting issues, run:
 ```powershell
 npx eslint tests 
@@ -91,7 +116,7 @@ To fix the fixables we can use
 npx eslint tests --fix
 ```
 
-### Prettier
+### Prettier 🦋
 To format a specific file, use:
 ```powershell 
 npx prettier tests/interview/medium.spec.ts --write
@@ -101,14 +126,14 @@ To format all files in the tests directory, use:
 npx prettier tests --write
 ```
 
-## Slack Notification Integration
+## Slack Notification Integration 📫
 
 Slack messages have been integrated into the GitHub Actions pipeline to notify the team of test results for both UI and API tests. The Slack messages are configured to be sent to a designated channel once tests are completed, and they provide a link to the HTML reports stored in the playwright-report folder.
    * source of learning
       * from collab repo
       * Some YouTube videos
 
-## Tesseract.js Integration
+## Tesseract.js Integration 🏜️
 
 In this project, I have integrated Tesseract.js to extract text from images using Playwright. Below are the details of the implementation process.
    * source of learning
@@ -122,10 +147,10 @@ To use Tesseract.js, ensure it is installed in your project. You can add it by r
 npm i tesseract.js
 ```
 
-## The Power of --help in NPX Command
+## The Power of --help in NPX Command 💁
 The --help option in the npx command can provide valuable information about the available commands and their usage. For example, running npx --help will display a list of all the available npx commands and their descriptions.
 
-# Repo Maintenance
+# Repo Maintenance 🛠️
 
 >### How to Uninstall the packages
 To uninstall the package ex: `@nut-tree-fork/nut-js`, you can use the following command in your terminal or command prompt:
@@ -150,7 +175,7 @@ npm prune
 ```
 
 
-## Acknowledgments / Implementations:
+## Acknowledgments / Implementations 🔬:
 
 * This implementation of TypeScript code styling and linting was inspired by Thananjayan's article on Medium .
    > https://medium.com/@thananjayan1988/typescript-code-styling-and-linting-assistant-93ff67557b1c
@@ -159,7 +184,7 @@ npm prune
 In addition to the following medium documentation i took help of GPT to print the report in an txt file and we can find the same inside the playwright-report > custom-report
    > https://medium.com/@eugenegronski/how-to-use-the-playwright-reporter-api-to-create-custom-reports-43de0e89cd3f
 
-## Commands I Normally Use
+## Commands I Normally Use ⌨️
 
 ```powershell
 $env:LOG_LEVEL = "debug"; npx playwright test tests/playwright_utube/dynamicContent_APImocking.spec.ts --project=chromium --headed --ui
@@ -173,7 +198,7 @@ $env:LOG_LEVEL = "debug"; npx playwright test tests/checkly_utube/timer_control.
 $env:LOG_LEVEL = "debug"; npx playwright test tests/automation_using_tessaract_js/rs_logoRead.spec.ts --project=chromium --headed
 ```
 
-# Yet to Implemet in the repo 
-> Zero_step
+# Yet to Implemet in the repo ✒️
+> Zero_step , bdd, just started , yet to install bdd deps and add the same to readme , change the location of fixtures eetc 
 
 > azure pipeline
