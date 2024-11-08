@@ -131,11 +131,10 @@ jobs:
 
     - name: Check if BDD Features File Exists
       run: |
-        if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi
-    
+        if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi    
 
-    - name: Run Playwright Tests
-      run: npx playwright test --project=bdd_chromium
+    - name: Run Playwright Tests with Verbose Logging
+      run: npx playwright test --project=bdd_chromium --reporter=list
 
     - name: Upload BDD Test Report
       uses: actions/upload-artifact@v4
