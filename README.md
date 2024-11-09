@@ -1,4 +1,4 @@
-# Playwright TypeScript Automation Project
+# Playwright TypeScript Automation Project [![Playwright Tests](https://github.com/Sunil-Kumar-Reddy-K/Playwright-ts_UI_and_API_Automation_framework/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/Sunil-Kumar-Reddy-K/Playwright-ts_UI_and_API_Automation_framework/actions/workflows/playwright.yml)
 
 This project uses **Playwright** with **TypeScript** to automate both UI and API testing for the **Green Kart** web application and the **Simple Grocery Store API**. It includes health checks, end-to-end scenarios, and comprehensive API coverage.
 

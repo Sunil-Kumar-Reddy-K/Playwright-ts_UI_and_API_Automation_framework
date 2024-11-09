@@ -1,13 +1,14 @@
 {
     "compilerOptions": {
       "target": "ESNext",
-      "module": "CommonJS",
+      "module": "NodeNext",
+      "moduleResolution": "nodenext",
       "strict": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true
     },
     "include": ["tests/**/*.ts", "eslint.config.mjs", "playwright.config.ts", "custom-reporter.ts", "features/steps/**.ts"],
-    "exclude": ["node_modules", ".features-gen"]
+    "exclude": ["node_modules"]
   }
   
