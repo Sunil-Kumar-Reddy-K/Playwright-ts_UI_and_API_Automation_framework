@@ -13,6 +13,10 @@ export default tseslint.config(
         "@typescript-eslint/no-floating-promises" : "error",
         "@typescript-eslint/await-thenable" : "error",
     },
+    ignores: [
+        '.features-gen/**/*',
+        'node_modules'
+    ],
     
   }
 );
