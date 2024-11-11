@@ -138,7 +138,7 @@ jobs:
       run: |
         if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi    
 
-    - name: Run Playwright Tests with Verbose Logging
+    - name: Run BDD Tests
       run: npx playwright test --project=bdd_chromium
 
     - name: Upload BDD Test Report
