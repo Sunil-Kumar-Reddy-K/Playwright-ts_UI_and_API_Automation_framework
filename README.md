@@ -203,4 +203,4 @@ $env:LOG_LEVEL = "debug"; npx playwright test tests/automation_using_tessaract_j
 
 > azure pipeline
 
-> ortoni report
+> ortoni report , https://github.com/ortoniKC/ortoni-report
