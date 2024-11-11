@@ -202,3 +202,5 @@ $env:LOG_LEVEL = "debug"; npx playwright test tests/automation_using_tessaract_j
 > Zero_step , bdd, just started , yet to install bdd deps and add the same to readme , change the location of fixtures eetc 
 
 > azure pipeline
+
+> ortoni report
