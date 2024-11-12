@@ -139,15 +139,6 @@ jobs:
               run: |
                   if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi
 
-            - name: Log Secrets for Debugging
-              run: |
-                  echo "SECRET_KEY: ${{ secrets.SECRET_KEY }}"
-                  echo "ENCRYPTED_USERNAME: $ENCRYPTED_USERNAME"
-                  echo "ENCRYPTED_PASSWORD: $ENCRYPTED_PASSWORD"
-              env:
-                  ENCRYPTED_USERNAME: ${{ secrets.ENCRYPTED_USERNAME }}
-                  ENCRYPTED_PASSWORD: ${{ secrets.ENCRYPTED_PASSWORD }}
-
             - name: Run BDD Tests
               run: export ENV="ci" && npx playwright test --project=bdd_chromium
 
