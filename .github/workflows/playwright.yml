@@ -109,8 +109,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+      SECRET_KEY: ${{ secrets.SECRET_KEY }}
     container:
-      image: mcr.microsoft.com/playwright:v1.47.0-jammy
+      image: mcr.microsoft.com/playwright:v1.48.1-jammy
     timeout-minutes: 60
     steps:
     - uses: actions/checkout@v4
@@ -132,7 +133,7 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Generate BDD Files
-      run: npx bddgen --tags "@BDD"
+      run: $env:ENV="ci"; npx bddgen --tags "@BDD"
 
     - name: Check if BDD Features File Exists
       run: |

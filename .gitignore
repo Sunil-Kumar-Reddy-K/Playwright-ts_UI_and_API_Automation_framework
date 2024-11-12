@@ -8,6 +8,7 @@ combined.log
 tests/interview
 eng.traineddata
 zerostep.config.json
+env/*.local
 
 # BDD
 **/.features-gen/**/*.spec.js

@@ -1,4 +1,4 @@
-import test from '../../features/steps/basepage';
+import test from '../../features/steps/basepage'
 import { TodoPage } from '../../pages/todo.page'
 
 test.describe('todo tests', () => {

@@ -203,4 +203,8 @@ $env:LOG_LEVEL = "debug"; npx playwright test tests/automation_using_tessaract_j
 
 > azure pipeline
 
-> ortoni report , https://github.com/ortoniKC/ortoni-report
+> ortoni report
+
+> .env implementation , [text](https://www.npmjs.com/package/dotenv) "https://www.youtube.com/watch?v=OpxLilD600I&ab_channel=CommitQuality"
+
+> just run one file like unit test ex crypti is "ts-node lib\cryptoUtils.ts"
