@@ -1,166 +1,175 @@
 name: Playwright Tests
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-  schedule:
-    # Run every Monday and Thursday at 5 AM IST (11:30 PM UTC)
-    - cron: '30 23 * * 0,3'
+    push:
+        branches: [main, master]
+    pull_request:
+        branches: [main, master]
+    schedule:
+        # Run every Monday and Thursday at 5 AM IST (11:30 PM UTC)
+        - cron: '30 23 * * 0,3'
 
 jobs:
-  ui-tests:
-    name: Execute UI Playwright Tests
-    runs-on: ubuntu-latest
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-    container:
-      image: mcr.microsoft.com/playwright:v1.47.0-jammy
-    timeout-minutes: 60
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Cache Node.js modules
-      uses: actions/cache@v4
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - name: Install Dependencies
-      run: npm ci
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run UI Tests
-      run: npx playwright test --grep @UI --project=chromium
-    - name: Upload UI Test Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: ui-playwright-report
-        path: playwright-report/
-        retention-days: 30
-    - name: Upload Failed Test Artifacts
-      uses: actions/upload-artifact@v4
-      if: failure()
-      with:
-        name: ui-failed-test-artifacts
-        path: path/to/failure/screenshots/
-        retention-days: 30
-    - name: Notify Slack for UI Test Results
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-        SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
-        SLACK_USERNAME: Playwright GitHub Actions
-        SLACK_MESSAGE: "UI Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}."
-      if: always()
+    ui-tests:
+        name: Execute UI Playwright Tests
+        runs-on: ubuntu-latest
+        env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+        container:
+            image: mcr.microsoft.com/playwright:v1.47.0-jammy
+        timeout-minutes: 60
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+            - name: Cache Node.js modules
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
+            - name: Install Dependencies
+              run: npm ci
+            - name: Install Playwright Browsers
+              run: npx playwright install --with-deps
+            - name: Run UI Tests
+              run: npx playwright test --grep @UI --project=chromium
+            - name: Upload UI Test Report
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: ui-playwright-report
+                  path: playwright-report/
+                  retention-days: 30
+            - name: Upload Failed Test Artifacts
+              uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: ui-failed-test-artifacts
+                  path: path/to/failure/screenshots/
+                  retention-days: 30
+            - name: Notify Slack for UI Test Results
+              uses: rtCamp/action-slack-notify@v2
+              env:
+                  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+                  SLACK_CHANNEL: '#automate_greenkart_using_playwright_ts_api-run_report'
+                  SLACK_USERNAME: Playwright GitHub Actions
+                  SLACK_MESSAGE: 'UI Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.'
+              if: always()
 
-  api-tests:
-    name: Execute API Playwright Tests
-    runs-on: ubuntu-latest
-    container:
-      image: node:lts
-    timeout-minutes: 60
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Cache Node.js modules
-      uses: actions/cache@v4
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
-    - name: Install Dependencies
-      run: npm ci
-    - name: Run API Tests
-      run: npx playwright test --grep @API --project=chromium
-    - name: Upload API Test Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: api-playwright-report
-        path: playwright-report/
-        retention-days: 30
-    - name: Upload Failed Test Artifacts
-      uses: actions/upload-artifact@v4
-      if: failure()
-      with:
-        name: api-failed-test-artifacts
-        path: path/to/failure/screenshots/
-        retention-days: 30
-    - name: Notify Slack for API Test Results
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-        SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
-        SLACK_USERNAME: Playwright GitHub Actions
-        SLACK_MESSAGE: "API Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}."
-      if: always()
+    api-tests:
+        name: Execute API Playwright Tests
+        runs-on: ubuntu-latest
+        container:
+            image: node:lts
+        timeout-minutes: 60
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+            - name: Cache Node.js modules
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
+            - name: Install Dependencies
+              run: npm ci
+            - name: Run API Tests
+              run: npx playwright test --grep @API --project=chromium
+            - name: Upload API Test Report
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: api-playwright-report
+                  path: playwright-report/
+                  retention-days: 30
+            - name: Upload Failed Test Artifacts
+              uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: api-failed-test-artifacts
+                  path: path/to/failure/screenshots/
+                  retention-days: 30
+            - name: Notify Slack for API Test Results
+              uses: rtCamp/action-slack-notify@v2
+              env:
+                  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+                  SLACK_CHANNEL: '#automate_greenkart_using_playwright_ts_api-run_report'
+                  SLACK_USERNAME: Playwright GitHub Actions
+                  SLACK_MESSAGE: 'API Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.'
+              if: always()
 
-  bdd-tests:
-    name: Execute BDD Playwright Tests
-    runs-on: ubuntu-latest
-    env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-    container:
-      image: mcr.microsoft.com/playwright:v1.48.1-jammy
-    timeout-minutes: 60
-    steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-    - name: Cache Node.js modules
-      uses: actions/cache@v4
-      with:
-        path: ~/.npm
-        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-node-
+    bdd-tests:
+        name: Execute BDD Playwright Tests
+        runs-on: ubuntu-latest
+        env:
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+            SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        container:
+            image: mcr.microsoft.com/playwright:v1.48.1-jammy
+        timeout-minutes: 60
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+            - name: Cache Node.js modules
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
 
-    - name: Install Dependencies
-      run: npm ci
-      
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
+            - name: Install Dependencies
+              run: npm ci
 
-    - name: Generate BDD Files
-      run: export ENV="ci" && npx bddgen --tags "@BDD"
+            - name: Install Playwright Browsers
+              run: npx playwright install --with-deps
 
-    - name: Check if BDD Features File Exists
-      run: |
-        if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi    
+            - name: Generate BDD Files
+              run: export ENV="ci" && npx bddgen --tags "@BDD"
 
-    - name: Run BDD Tests
-      run: npx playwright test --project=bdd_chromium
+            - name: Check if BDD Features File Exists
+              run: |
+                  if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi
 
-    - name: Upload BDD Test Report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: bdd-playwright-report
-        path: playwright-report/
-        retention-days: 30
-    - name: Upload Failed BDD Test Artifacts
-      uses: actions/upload-artifact@v4
-      if: failure()
-      with:
-        name: bdd-failed-test-artifacts
-        path: path/to/failure/screenshots/
-        retention-days: 30
-    - name: Notify Slack for BDD Test Results
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-        SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
-        SLACK_USERNAME: Playwright GitHub Actions
-        SLACK_MESSAGE: "BDD Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}."
-      if: always()
+            - name: Log Secrets for Debugging
+              run: |
+                  echo "SECRET_KEY: ${{ secrets.SECRET_KEY }}"
+                  echo "ENCRYPTED_USERNAME: $ENCRYPTED_USERNAME"
+                  echo "ENCRYPTED_PASSWORD: $ENCRYPTED_PASSWORD"
+              env:
+                  ENCRYPTED_USERNAME: ${{ secrets.ENCRYPTED_USERNAME }}
+                  ENCRYPTED_PASSWORD: ${{ secrets.ENCRYPTED_PASSWORD }}
+
+            - name: Run BDD Tests
+              run: npx playwright test --project=bdd_chromium
+
+            - name: Upload BDD Test Report
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: bdd-playwright-report
+                  path: playwright-report/
+                  retention-days: 30
+            - name: Upload Failed BDD Test Artifacts
+              uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: bdd-failed-test-artifacts
+                  path: path/to/failure/screenshots/
+                  retention-days: 30
+            - name: Notify Slack for BDD Test Results
+              uses: rtCamp/action-slack-notify@v2
+              env:
+                  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+                  SLACK_CHANNEL: '#automate_greenkart_using_playwright_ts_api-run_report'
+                  SLACK_USERNAME: Playwright GitHub Actions
+                  SLACK_MESSAGE: 'BDD Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.'
+              if: always()
