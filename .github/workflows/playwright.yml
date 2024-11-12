@@ -133,7 +133,7 @@ jobs:
       run: npx playwright install --with-deps
 
     - name: Generate BDD Files
-      run: $env:ENV="ci"; npx bddgen --tags "@BDD"
+      run: $env:ENV="ci" && npx bddgen --tags "@BDD"
 
     - name: Check if BDD Features File Exists
       run: |
