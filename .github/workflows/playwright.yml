@@ -133,7 +133,7 @@ jobs:
               run: npx playwright install --with-deps
 
             - name: Generate BDD Files
-              run: export ENV="ci" && npx bddgen --tags "@BDD"
+              run: npx bddgen --tags "@BDD"
 
             - name: Check if BDD Features File Exists
               run: |
@@ -149,7 +149,7 @@ jobs:
                   ENCRYPTED_PASSWORD: ${{ secrets.ENCRYPTED_PASSWORD }}
 
             - name: Run BDD Tests
-              run: npx playwright test --project=bdd_chromium
+              run: export ENV="ci" && npx playwright test --project=bdd_chromium
 
             - name: Upload BDD Test Report
               uses: actions/upload-artifact@v4
