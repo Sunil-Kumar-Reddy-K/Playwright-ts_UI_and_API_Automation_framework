@@ -1,12 +1,12 @@
-import test from '../../features/steps/basepage';
+import test from "../../features/steps/basepage";
 
 test(
-    'Register account with AI-generated data',
-    { tag: '@UI' },
+    "Register account with AI-generated data",
+    { tag: "@UI" },
     async ({ page, ai }) => {
         test.slow();
 
-        await page.goto('https://ecommerce-playground.lambdatest.io/');
+        await page.goto("https://ecommerce-playground.lambdatest.io/");
 
         await ai('click on "My account"');
 
@@ -28,7 +28,7 @@ test(
 
         await page.waitForLoadState();
 
-        await ai('Fill out the form with realistic data');
+        await ai("Fill out the form with realistic data");
 
         // await ai('Select "Fife" from the "Region / State" drop down');
 

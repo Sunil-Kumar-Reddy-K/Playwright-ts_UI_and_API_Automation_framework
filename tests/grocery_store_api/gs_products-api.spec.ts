@@ -1,13 +1,13 @@
-import { test, expect } from '@playwright/test';
-import logger from '../../winston_logger.config';
+import { test, expect } from "@playwright/test";
+import logger from "../../winston_logger.config";
 
-const baseUrl = 'http://simple-grocery-store-api.online';
+const baseUrl = "http://simple-grocery-store-api.online";
 let productId: string;
 
-test.describe.serial('Products API Tests', () => {
+test.describe.serial("Products API Tests", () => {
     test(
-        'GET All Products API should return status 200 and a list of products',
-        { tag: '@API' },
+        "GET All Products API should return status 200 and a list of products",
+        { tag: "@API" },
         async ({ request }) => {
             const response = await request.get(`${baseUrl}/products`);
 
@@ -23,8 +23,8 @@ test.describe.serial('Products API Tests', () => {
     );
 
     test(
-        'GET Single Product API should return status 200 and product details',
-        { tag: '@API' },
+        "GET Single Product API should return status 200 and product details",
+        { tag: "@API" },
         async ({ request }) => {
             const response = await request.get(
                 `${baseUrl}/products/${productId}`,
@@ -36,9 +36,9 @@ test.describe.serial('Products API Tests', () => {
 
             // logger.info(JSON.stringify(responseBody));
 
-            expect(responseBody).toHaveProperty('id', productId);
-            expect(responseBody).toHaveProperty('name');
-            expect(responseBody).toHaveProperty('price');
+            expect(responseBody).toHaveProperty("id", productId);
+            expect(responseBody).toHaveProperty("name");
+            expect(responseBody).toHaveProperty("price");
         },
     );
 });

@@ -22,14 +22,14 @@
  * ```
  */
 
-import { translate } from '@vitalets/google-translate-api';
-import test from '../../features/steps/basepage';
-import { HttpProxyAgent } from 'http-proxy-agent';
+import { translate } from "@vitalets/google-translate-api";
+import test from "../../features/steps/basepage";
+import { HttpProxyAgent } from "http-proxy-agent";
 
-test('Translate English to Telugu', { tag: '@google' }, async ({}) => {
-    const agent = new HttpProxyAgent('http://103.152.112.162:80');
-    const { text } = await translate('I love India', {
-        to: 'te',
+test("Translate English to Telugu", { tag: "@google" }, async ({}) => {
+    const agent = new HttpProxyAgent("http://103.152.112.162:80");
+    const { text } = await translate("I love India", {
+        to: "te",
         fetchOptions: { agent },
     });
     console.log(text);
