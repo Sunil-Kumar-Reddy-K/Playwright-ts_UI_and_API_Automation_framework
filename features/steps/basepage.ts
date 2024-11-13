@@ -24,4 +24,3 @@ const test = base.extend<{
 // Integrate BDD functionality
 export const { Given, When, Then } = createBdd(test);
 export default test;
-export const expect = test.expect;

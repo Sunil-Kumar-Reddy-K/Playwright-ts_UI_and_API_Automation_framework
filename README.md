@@ -196,6 +196,10 @@ $env:LOG_LEVEL = "debug"; npx playwright test tests/medium/mastering-fixtures-in
 $env:LOG_LEVEL = "debug"; npx playwright test tests/checkly_utube/timer_control.spec.ts --project=chromium --headed --debug
 
 $env:LOG_LEVEL = "debug"; npx playwright test tests/automation_using_tessaract_js/rs_logoRead.spec.ts --project=chromium --headed
+
+$env:ENV="local"; npx bddgen --tags "@crypto"; npx playwright test --project=bdd_chromium --workers=1 --headed
+
+$env:LOG_LEVEL = "debug"; $env:ZEROSTEP_TOKEN = "0step:2bee65c6-9cc5-4e29-8eaa-03daf7e173c3"; npx playwright test tests/zero_step/gk_happyPath.spec.ts --project=chromium --headed
 ```
 
 # Yet to Implemet in the repo ✒️

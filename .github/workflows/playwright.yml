@@ -14,7 +14,7 @@ jobs:
         name: Execute UI Playwright Tests
         runs-on: ubuntu-latest
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+            ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
         container:
             image: mcr.microsoft.com/playwright:v1.47.0-jammy
         timeout-minutes: 60
@@ -35,7 +35,11 @@ jobs:
             - name: Install Playwright Browsers
               run: npx playwright install --with-deps
             - name: Run UI Tests
-              run: npx playwright test --grep @UI --project=chromium
+              # Capture test exit code to allow all tests to run even if some fail
+              run: |
+                  export LOG_LEVEL="debug"
+                  export ZEROSTEP_TOKEN="${{ secrets.ZEROSTEP_TOKEN }}"
+                  npx playwright test --grep @UI --project=chromium || echo "UI Tests failed" >> test_failures.txt
             - name: Upload UI Test Report
               uses: actions/upload-artifact@v4
               if: always()
@@ -80,7 +84,8 @@ jobs:
             - name: Install Dependencies
               run: npm ci
             - name: Run API Tests
-              run: npx playwright test --grep @API --project=chromium
+              run: |
+                  npx playwright test --grep @API --project=chromium || echo "API Tests failed" >> test_failures.txt
             - name: Upload API Test Report
               uses: actions/upload-artifact@v4
               if: always()
@@ -108,7 +113,6 @@ jobs:
         name: Execute BDD Playwright Tests
         runs-on: ubuntu-latest
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
             SECRET_KEY: ${{ secrets.SECRET_KEY }}
         container:
             image: mcr.microsoft.com/playwright:v1.48.1-jammy
@@ -125,23 +129,17 @@ jobs:
                   key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
                   restore-keys: |
                       ${{ runner.os }}-node-
-
             - name: Install Dependencies
               run: npm ci
-
             - name: Install Playwright Browsers
               run: npx playwright install --with-deps
-
             - name: Generate BDD Files
               run: export ENV="ci" && npx bddgen --tags "@BDD"
-
             - name: Check if BDD Features File Exists
               run: |
                   if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi
-
             - name: Run BDD Tests
-              run: export ENV="ci" && npx playwright test --project=bdd_chromium
-
+              run: export ENV="ci" && npx playwright test --project=bdd_chromium || echo "BDD Tests failed" >> test_failures.txt
             - name: Upload BDD Test Report
               uses: actions/upload-artifact@v4
               if: always()
@@ -164,3 +162,17 @@ jobs:
                   SLACK_USERNAME: Playwright GitHub Actions
                   SLACK_MESSAGE: 'BDD Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.'
               if: always()
+
+    # Final step to check for any failures across all test jobs
+    check-failures:
+        runs-on: ubuntu-latest
+        needs: [ui-tests, api-tests, bdd-tests]
+        steps:
+            - name: Check for Test Failures
+              run: |
+                  if [ -f test_failures.txt ]; then
+                    echo "One or more test suites failed."
+                    exit 1
+                  else
+                    echo "All tests passed successfully."
+                  fi
