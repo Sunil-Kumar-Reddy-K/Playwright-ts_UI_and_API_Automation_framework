@@ -1,16 +1,16 @@
-import test from '../../features/steps/basepage';
+import test from "../../features/steps/basepage";
 
 test(
-    'Place an order and complete payment',
-    { tag: '@UI' },
+    "Place an order and complete payment",
+    { tag: "@UI" },
     async ({ page, ai }) => {
         test.slow();
-        await page.goto('https://rahulshettyacademy.com/seleniumPractise/');
+        await page.goto("https://rahulshettyacademy.com/seleniumPractise/");
         await ai('search for "Brocolli"');
         await ai(
             'click on "ADD TO CART" button once Brocolli shows uo in the search results',
         );
-        await ai('click on the cart icon');
+        await ai("click on the cart icon");
         await ai('click on "PROCEED TO CHECKOUT" button');
         await page.waitForURL(/.*\/cart$/);
         await ai('click on "Place Order" button');
