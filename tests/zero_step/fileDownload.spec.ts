@@ -1,6 +1,6 @@
 import test from '../../features/steps/basepage'
 
-test('Upload sample.txt file', { tag: '@UI' }, async ({ page, ai }) => {
+test('Upload sample.txt file', async ({ page, ai }) => {
     // Step 1: Navigate to the given URL
     await page.goto(
         'https://www.tutorialspoint.com/selenium/practice/upload-download.php',
