@@ -4,7 +4,7 @@ test(
     'Place an order and complete payment',
     { tag: '@UI' },
     async ({ page, ai }) => {
-        test.slow();
+        test.slow()
         await page.goto('https://rahulshettyacademy.com/seleniumPractise/')
         await ai('search for "Brocolli"')
         await ai(

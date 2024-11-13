@@ -4,8 +4,7 @@ test(
     'Register account with AI-generated data',
     { tag: '@UI' },
     async ({ page, ai }) => {
-
-        test.slow();
+        test.slow()
 
         await page.goto('https://ecommerce-playground.lambdatest.io/')
 
