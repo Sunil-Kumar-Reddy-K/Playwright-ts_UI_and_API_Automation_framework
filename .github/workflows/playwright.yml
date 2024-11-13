@@ -38,7 +38,7 @@ jobs:
               # Capture test exit code to allow all tests to run even if some fail
               run: |
                   export LOG_LEVEL="debug"
-                  export ZEROSTEP_TOKEN="0step:2bee65c6-9cc5-4e29-8eaa-03daf7e173"
+                  export ZEROSTEP_TOKEN="${{ secrets.ZEROSTEP_TOKEN }}"
                   npx playwright test --grep @UI --project=chromium || echo "UI Tests failed" >> test_failures.txt
             - name: Upload UI Test Report
               uses: actions/upload-artifact@v4
