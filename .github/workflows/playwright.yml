@@ -14,7 +14,7 @@ jobs:
         name: Execute UI Playwright Tests
         runs-on: ubuntu-latest
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+            ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
         container:
             image: mcr.microsoft.com/playwright:v1.47.0-jammy
         timeout-minutes: 60
@@ -108,7 +108,6 @@ jobs:
         name: Execute BDD Playwright Tests
         runs-on: ubuntu-latest
         env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
             SECRET_KEY: ${{ secrets.SECRET_KEY }}
         container:
             image: mcr.microsoft.com/playwright:v1.48.1-jammy
