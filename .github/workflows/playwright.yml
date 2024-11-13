@@ -35,7 +35,7 @@ jobs:
             - name: Install Playwright Browsers
               run: npx playwright install --with-deps
             - name: Run UI Tests
-              run: npx playwright test --grep @UI --project=chromium
+              run:    export ZEROSTEP_TOKEN="${{ secrets.ZEROSTEP_TOKEN }}" && npx playwright test --grep @UI --project=chromium
             - name: Upload UI Test Report
               uses: actions/upload-artifact@v4
               if: always()
