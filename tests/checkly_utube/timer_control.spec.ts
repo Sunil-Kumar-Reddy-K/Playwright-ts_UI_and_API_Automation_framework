@@ -1,7 +1,7 @@
 import { test, Locator } from '@playwright/test'
 import Tesseract from 'tesseract.js'
 
-test('fast forward the timer', async ({ page }) => {
+test('fast forward the timer', { tag: '@UI' }, async ({ page }) => {
     await page.clock.install()
     await page.goto('https://www.online-stopwatch.com/online-digital-clock/')
     await page.waitForLoadState()

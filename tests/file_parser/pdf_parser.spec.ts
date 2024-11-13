@@ -5,7 +5,6 @@
  *
  */
 
-import { expect } from '../../features/steps/basepage'
 import test from '../../features/steps/basepage'
 import pdf from 'pdf-parse'
 import fs from 'fs'

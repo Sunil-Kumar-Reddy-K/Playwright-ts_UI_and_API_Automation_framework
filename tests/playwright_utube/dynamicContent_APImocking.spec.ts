@@ -1,4 +1,5 @@
-import { test, expect } from '@playwright/test'
+import test from '../../features/steps/basepage'
+import { expect } from '@playwright/test'
 
 /**
  * There are different types of mocking, like we can mock (API rsponse afcource)
@@ -9,7 +10,7 @@ import { test, expect } from '@playwright/test'
  * INSPIRATION from = https://www.youtube.com/watch?v=kvGszYAYQ6M
  */
 
-test('Mock movie score for The Godfather', async ({ page }) => {
+test('Mock movie score for The Godfather', { tag: '@UI' }, async ({ page }) => {
     // Intercept the request for the specific movie
     await page.route(
         'https://wpmovies.dev/movies/the-godfather/',
