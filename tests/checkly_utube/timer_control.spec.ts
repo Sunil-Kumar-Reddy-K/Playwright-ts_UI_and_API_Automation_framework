@@ -1,5 +1,5 @@
-import { test, Locator } from '@playwright/test';
-import Tesseract from 'tesseract.js';
+import { test, Locator } from '@playwright/test'
+import Tesseract from 'tesseract.js'
 
 test('fast forward the timer', async ({ page }) => {
     await page.clock.install()

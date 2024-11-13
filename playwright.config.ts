@@ -2,6 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 import { defineBddConfig, defineBddProject } from 'playwright-bdd';
 import { OrtoniReportConfig } from "ortoni-report";
 import moment from "moment";
+import dotenv from 'dotenv';
 
 // Generate a timestamp for unique report folder names
 const timestamp = moment().format("YYYY-MM-DD_HH-mm-ss");
@@ -30,8 +31,8 @@ const reportConfig: OrtoniReportConfig = {
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
  */
-// import dotenv from 'dotenv';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+
+dotenv.config({ path: `env/.env.${process.env.ENV}`});
 
 /**
  * See https://playwright.dev/docs/test-configuration.

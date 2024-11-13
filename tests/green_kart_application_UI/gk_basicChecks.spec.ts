@@ -1,5 +1,5 @@
-import { expect } from '@playwright/test';
-import test from '../../features/steps/basepage';
+import { expect } from '@playwright/test'
+import test from '../../features/steps/basepage'
 
 test.beforeEach(async ({ page }) => {
     await page.goto('/seleniumPractise/#')

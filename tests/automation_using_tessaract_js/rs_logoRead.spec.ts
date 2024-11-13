@@ -1,6 +1,6 @@
-import { expect } from '@playwright/test';
-import test from '../../features/steps/basepage';
-import Tesseract from 'tesseract.js';
+import { expect } from '@playwright/test'
+import test from '../../features/steps/basepage'
+import Tesseract from 'tesseract.js'
 
 test(
     `Capture logo text from Riverside insights website`,
