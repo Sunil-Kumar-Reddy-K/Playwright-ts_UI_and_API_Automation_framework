@@ -33,3 +33,19 @@ When("I will be clicking on Examinees header", async ({ riverside }) => {
 Then("I will be at the Examinee management page", async ({ riverside }) => {
     await riverside.expectPageToBeExamineeManagement();
 });
+
+When('I will be manupulating the dashboard welcome text as {string}', async ({riverside}, welcomeText: string) => {
+    await riverside.changeTheHeaderTextTo(welcomeText);
+});
+
+Then('I will be asserting the updated {string}', async ({riverside}, text: string) => {
+    await riverside.assertTheText(text);
+});
+
+Then('I will validate the Notification Center border style', async ({riverside}) => {
+    await riverside.verifyNotificationCenterBorderStyle();
+  });
+
+Then('I will navigate to {string}', async ({riverside}, url: string) => {
+    await riverside.navigateTo(url);
+  });
