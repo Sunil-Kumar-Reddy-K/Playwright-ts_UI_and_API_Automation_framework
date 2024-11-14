@@ -7,7 +7,7 @@ on:
         branches: [main, master]
     schedule:
         # Run every Monday and Thursday at 5 AM IST (11:30 PM UTC)
-        - cron: '30 23 * * 0,3'
+        - cron: "30 23 * * 0,3"
 
 jobs:
     ui-tests:
@@ -58,9 +58,17 @@ jobs:
               uses: rtCamp/action-slack-notify@v2
               env:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-                  SLACK_CHANNEL: '#automate_greenkart_using_playwright_ts_api-run_report'
+                  SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: '🚀 **UI Test Results** 🚀\n\n🔍 Results are available in the Artifacts section: [View Results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n💡 _Tip: Check the logs for details!_'
+                  SLACK_MESSAGE: |
+                      :bell: **UI Test Results Notification** :bell:
+
+                      :page_facing_up: **Repository:** Sunil-302
+                      :branch: **Branch:** ${{ github.ref }}
+                      :memo: **Results available in Artifacts**: [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                      :clock10: **Commit:** ${{ github.sha }}
+
+                      Powered by GitHub Actions | Triggered on ${{ github.event_name }}
               if: always()
 
     api-tests:
@@ -104,9 +112,17 @@ jobs:
               uses: rtCamp/action-slack-notify@v2
               env:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-                  SLACK_CHANNEL: '#automate_greenkart_using_playwright_ts_api-run_report'
+                  SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: '🔔 **API Test Results Notification** 🔔\n\n📄 **Repository:** Sunil-302\n🔗 **Branch:** refs/heads/main\n📝 Test results are available in the Artifacts section: [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
+                  SLACK_MESSAGE: |
+                      :bell: **API Test Results Notification** :bell:
+
+                      :page_facing_up: **Repository:** Sunil-302
+                      :branch: **Branch:** ${{ github.ref }}
+                      :memo: **Results available in Artifacts**: [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                      :clock10: **Commit:** ${{ github.sha }}
+
+                      Powered by GitHub Actions | Triggered on ${{ github.event_name }}
               if: always()
 
     bdd-tests:
@@ -158,9 +174,17 @@ jobs:
               uses: rtCamp/action-slack-notify@v2
               env:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-                  SLACK_CHANNEL: '#automate_greenkart_using_playwright_ts_api-run_report'
+                  SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: '📘 **BDD Test Results** 📘\n\n🔗 [View Results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n✨ _Check the logs for further insights!_'
+                  SLACK_MESSAGE: |
+                      :blue_book: **BDD Test Results** :blue_book:
+
+                      :page_facing_up: **Repository:** Sunil-302
+                      :branch: **Branch:** ${{ github.ref }}
+                      :link: [View Results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+                      :clock10: **Commit:** ${{ github.sha }}
+
+                      Powered by GitHub Actions | Triggered on ${{ github.event_name }}
               if: always()
 
     # Final step to check for any failures across all test jobs
