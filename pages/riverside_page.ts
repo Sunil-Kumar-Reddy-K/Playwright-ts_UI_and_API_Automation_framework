@@ -9,9 +9,9 @@ export class RIVERSIDE_LoginPage {
     private readonly SIGNIN_BUTTON: Locator;
     private readonly WJV_TILE: Locator;
     private readonly TEST_ASSSIGNMENTS_HEADING: Locator;
-    private readonly NO_RADIO_BUTTON: Locator;
-    private readonly WEB_TABLES_HEADER: Locator;
-    private readonly WEB_TABLES_EDIT_ICON: Locator;
+    private readonly EXAMINEES_HEADER: Locator;
+    private readonly LOADING_ICON: Locator;
+    private readonly EXAMINEE_MANAGEMENT_HEADING: Locator;
     private readonly REGISTRATION_FORM_HEADER: Locator;
     private readonly REGISTRATION_FORM_CLOSE_BUTTON: Locator;
     private readonly DOUBLE_CLICK_BUTTON: Locator;
@@ -31,9 +31,9 @@ export class RIVERSIDE_LoginPage {
         this.SIGNIN_BUTTON = page.getByRole('button', { name: 'Sign In' });
         this.TEST_ASSSIGNMENTS_HEADING = page.getByRole('heading', { name: 'My Test Assignments' });
         this.WJV_TILE = page.getByLabel('Woodcock Johnson V');
-        this.NO_RADIO_BUTTON = page.locator(`#noRadio`); // Using CSS Selector
-        this.WEB_TABLES_HEADER = page.getByRole('columnheader');
-        this.WEB_TABLES_EDIT_ICON = page.getByRole('row', { name: 'Cierra' }).getByTitle('Edit').locator('svg'); // Chaining Locators
+        this.EXAMINEES_HEADER = page.locator('//button[@aria-label="Examinees"]');
+        this.LOADING_ICON = page.locator('.loading-icon');
+        this.EXAMINEE_MANAGEMENT_HEADING = page.getByRole('heading', { name: 'EXAMINEE MANAGEMENT' }); // Chaining Locators
         this.REGISTRATION_FORM_HEADER = page.getByText('Registration Form');
         this.REGISTRATION_FORM_CLOSE_BUTTON = page.getByRole('button', { name: 'Close' });
         this.DOUBLE_CLICK_BUTTON = page.locator('#doubleClickBtn');
@@ -47,7 +47,7 @@ export class RIVERSIDE_LoginPage {
     }
 
     async navigateToRiverside(): Promise<void> {
-        await this.page.goto("https://riversidescore.com/");
+        await this.page.goto(process.env.ENVIRONMENT+"");
     }
 
     // async loginToRiverside(){
@@ -78,6 +78,18 @@ export class RIVERSIDE_LoginPage {
 
     async validateTestAssignmentsHeading(){
         await expect(this.TEST_ASSSIGNMENTS_HEADING).toBeVisible();
+    }
+
+    async clickOnExamineesHeader(){
+        await this.EXAMINEES_HEADER.click();
+    }
+
+    async expectPageToBeExamineeManagement(){
+        await expect(async () => {
+            await expect(this.LOADING_ICON).not.toBeVisible({timeout: 5000});
+            await this.page.reload();
+            await expect(this.EXAMINEE_MANAGEMENT_HEADING).toBeVisible();
+          }).toPass({timeout: 60000, intervals:[1000, 2000, 5000]});
     }
 
 

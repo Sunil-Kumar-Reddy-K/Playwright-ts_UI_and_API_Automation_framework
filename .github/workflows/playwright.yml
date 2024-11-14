@@ -60,7 +60,7 @@ jobs:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
                   SLACK_CHANNEL: '#automate_greenkart_using_playwright_ts_api-run_report'
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: 'UI Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.'
+                  SLACK_MESSAGE: '🚀 **UI Test Results** 🚀\n\n🔍 Results are available in the Artifacts section: [View Results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n💡 _Tip: Check the logs for details!_'
               if: always()
 
     api-tests:
@@ -106,7 +106,7 @@ jobs:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
                   SLACK_CHANNEL: '#automate_greenkart_using_playwright_ts_api-run_report'
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: 'API Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.'
+                  SLACK_MESSAGE: '🔔 **API Test Results Notification** 🔔\n\n📄 **Repository:** Sunil-302\n🔗 **Branch:** refs/heads/main\n📝 Test results are available in the Artifacts section: [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})'
               if: always()
 
     bdd-tests:
@@ -160,7 +160,7 @@ jobs:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
                   SLACK_CHANNEL: '#automate_greenkart_using_playwright_ts_api-run_report'
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: 'BDD Test results are available in the Artifacts section: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}.'
+                  SLACK_MESSAGE: '📘 **BDD Test Results** 📘\n\n🔗 [View Results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})\n✨ _Check the logs for further insights!_'
               if: always()
 
     # Final step to check for any failures across all test jobs
