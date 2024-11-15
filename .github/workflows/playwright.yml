@@ -137,6 +137,7 @@ jobs:
 
       # Notify Slack for API Test Results (dynamic message)
       - name: Notify Slack for API Test Results 
+        if: env.exists == 'true' # Only run this step if slack-message.txt exists.
         uses: rtCamp/action-slack-notify@v2 
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }} 
