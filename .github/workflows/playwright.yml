@@ -139,12 +139,15 @@ jobs:
         id: read_slack_message
         run: |
           if [ -f ./slack-message.txt ]; then
-             message=$(cat ./slack-message.txt)
-            echo "SLACK_MESSAGE=$message" >> $GITHUB_ENV
+            encoded_message=$(base64 -w 0 ./slack-message.txt)
           else
             echo "Slack message file not found"
             exit 1
           fi
+      - name: Decode slack message
+        run: |
+          decoded_message=$(echo "$SLACK_MESSAGE" | base64 --decode)  # Decode the message
+          echo "Decoded message: $decoded_message"  # Now use the decoded message in your script
         
 
       # Notify Slack for API Test Results (dynamic message)
