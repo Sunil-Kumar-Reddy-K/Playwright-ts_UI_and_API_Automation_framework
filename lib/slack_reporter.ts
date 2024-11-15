@@ -13,22 +13,23 @@ if (latestReport) {
 
         // Create a formatted message combining both metadata and test results
         const formattedMessage = `
+          📅 **Time and Date of Execution**: ${report.runTimestamp}
+
           :bell: **Test Results Notification** :bell:
           
           :page_facing_up: **Repository:** Sunil-302
           :branch: **Branch:** \`${process.env.GITHUB_REF}\`
           :memo: **Results available in Artifacts**: [View Artifacts](https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID})
           :clock10: **Commit:** \`${process.env.GITHUB_SHA}\`
-          
-          |--------------------------------------|
-          | Status | Count                     |
-          |-------------|------------------------|
-          | ✅ Passed | ${report.passed}       |
-          | ❌ Failed | ${report.failed}       |
-          | ⏭️ Skipped | ${report.skipped}     |
-          | 🔄 Retried | ${report.retried || 0}|
-          | 📊 Total   | ${report.totalTests}   |
+          |----------------------------------------------|
+  
+          | ✅ Passed  => ${report.passed}       |
+          | ❌ Failed  => ${report.failed}       |
+          | ⏭️ Skipped => ${report.skipped}     |
+          | 🔄 Retried => ${report.retried || 0}|
+          | 📊 Total   => ${report.totalTests}   |
           ⏰ **Total Execution Duration**: ${report.totalDuration || "N/A"}
+          |----------------------------------------------|
           
           Powered by GitHub Actions | Triggered on \`${process.env.GITHUB_EVENT_NAME}\`
         `;

@@ -123,6 +123,18 @@ jobs:
         run: |
           npx ts-node lib/slack_reporter.ts 
 
+      # Check if slack-message.txt was created before notifying Slack
+      - name: Check if Slack Message File Exists
+        id: check_slack_message_file
+        run: |
+          if [ -f ./slack-message.txt ]; then
+            echo "Slack message file exists."
+            echo "exists=true" >> $GITHUB_ENV
+          else
+            echo "Slack message file does not exist."
+            echo "exists=false" >> $GITHUB_ENV
+          fi
+
       # Notify Slack for API Test Results (dynamic message)
       - name: Notify Slack for API Test Results 
         uses: rtCamp/action-slack-notify@v2 
