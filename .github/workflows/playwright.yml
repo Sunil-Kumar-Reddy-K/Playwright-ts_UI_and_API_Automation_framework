@@ -121,7 +121,7 @@ jobs:
       # New Step to Generate Slack Message from JSON Report for API Tests 
       - name: Generate Slack Message for API Tests 
         run: |
-          npx ts-node lib/slack_reporter.ts 
+          node lib/slack_reporter.ts 
 
       # Check if slack-message.txt was created before notifying Slack
       - name: Check if Slack Message File Exists
@@ -135,7 +135,7 @@ jobs:
             echo "exists=false" >> $GITHUB_ENV
           fi
 
-      - name: Read Slack Message from File
+      - name: Read Slack Message
         id: read_slack_message
         run: |
           run: |
