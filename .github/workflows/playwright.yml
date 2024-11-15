@@ -135,6 +135,18 @@ jobs:
             echo "exists=false" >> $GITHUB_ENV
           fi
 
+      - name: Read Slack Message from File
+        id: read_slack_message
+        run: |
+          if [ -f ./slack-message.txt ]; then
+             message=$(cat ./slack-message.txt)
+            echo "SLACK_MESSAGE=$message" >> $GITHUB_ENV
+          else
+            echo "Slack message file not found"
+            exit 1
+          fi
+        
+
       # Notify Slack for API Test Results (dynamic message)
       - name: Notify Slack for API Test Results 
         if: env.exists == 'true' # Only run this step if slack-message.txt exists.
@@ -143,8 +155,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }} 
           SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report" 
           SLACK_USERNAME: Playwright GitHub Actions 
-          SLACK_MESSAGE: |
-            "$(cat ./slack-message.txt)"
+          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
 
   bdd-tests:
     name: Execute BDD Playwright Tests 
