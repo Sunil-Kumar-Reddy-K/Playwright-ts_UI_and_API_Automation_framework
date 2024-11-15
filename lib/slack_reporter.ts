@@ -6,10 +6,14 @@ const reportPath = path.resolve("playwright-report/custom-reporter/custom-report
 const files = fs.readdirSync(path.dirname(reportPath)).filter(file => file.startsWith("custom-report_"));
 const latestReport = files.length ? path.join(path.dirname(reportPath), files[files.length - 1]) : null;
 
+console.log("Reading report from:", reportPath, files, latestReport);
+
 if (latestReport) {
     try {
         const data = fs.readFileSync(latestReport, "utf-8");
         const report = JSON.parse(data);
+
+        console.log("Report Data:", report); // Log the parsed data
 
         // Create a formatted message combining both metadata and test results
         const formattedMessage = `
