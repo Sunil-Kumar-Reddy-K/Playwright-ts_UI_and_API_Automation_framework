@@ -144,7 +144,7 @@ jobs:
           SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report" 
           SLACK_USERNAME: Playwright GitHub Actions 
           SLACK_MESSAGE: |
-            $(cat ./slack-message.txt)
+            "$(cat ./slack-message.txt)"
 
   bdd-tests:
     name: Execute BDD Playwright Tests 
