@@ -21,20 +21,16 @@ if (latestReport) {
 
         console.log("Report Data:", report); // Log the parsed data
 
-        // Create a formatted message combining both metadata and test results
-const formattedMessage = `
-Time and Date of Execution: ${report.runTimestamp}
---------------------------------------
-Status         | Count
----------------|-------------------
-Passed         | ${report.passed}
-Failed         | ${report.failed}
-Skipped        | ${report.skipped}
-Retried        | ${report.retried || 0}
-Total          | ${report.totalTests}
-Total Execution Duration: ${report.totalDuration || "N/A"}
---------------------------------------
-`;
+        // Create a simple text message without any formatting
+    const formattedMessage = `Time and Date of Execution: ${report.runTimestamp}\n` +
+    `Status         | Count\n` +
+    `---------------|-------------------\n` +
+    `Passed        | ${report.passed}\n` +
+    `Failed        | ${report.failed}\n` +
+    `Skipped       | ${report.skipped}\n` +
+    `Retried       | ${report.retried || 0}\n` +
+    `Total         | ${report.totalTests}\n` +
+    `Total Execution Duration: ${report.totalDuration || "N/A"}`;
 
         // Write the formatted message to a file for Slack notification
         fs.writeFileSync("./slack-message.txt", formattedMessage);
