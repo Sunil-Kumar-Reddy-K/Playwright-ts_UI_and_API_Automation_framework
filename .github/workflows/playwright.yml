@@ -138,17 +138,9 @@ jobs:
       - name: Read Slack Message from File
         id: read_slack_message
         run: |
-          if [ -f ./slack-message.txt ]; then
-            encoded_message=$(base64 -w 0 ./slack-message.txt)
-          else
-            echo "Slack message file not found"
-            exit 1
-          fi
-      - name: Decode slack message
-        run: |
-          decoded_message=$(echo "$SLACK_MESSAGE" | base64 --decode)  # Decode the message
-          echo "Decoded message: $decoded_message"  # Now use the decoded message in your script
-        
+          run: |
+          SLACK_MESSAGE=$(cat ./slack-message.txt)
+          echo "::set-output name=message::$SLACK_MESSAGE"
 
       # Notify Slack for API Test Results (dynamic message)
       - name: Notify Slack for API Test Results 
@@ -158,7 +150,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }} 
           SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report" 
           SLACK_USERNAME: Playwright GitHub Actions 
-          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
+          SLACK_MESSAGE: ${{ steps.read_slack_message.outputs.message }}
 
   bdd-tests:
     name: Execute BDD Playwright Tests 
