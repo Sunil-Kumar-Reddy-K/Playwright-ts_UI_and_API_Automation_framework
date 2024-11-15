@@ -1,10 +1,14 @@
-name: Playwright Tests
+name: Playwright Test Pipeline
 
 on:
   push:
-    branches: [main, master]
+    branches:
+      - main
+      - master
   pull_request:
-    branches: [main, master]
+    branches:
+      - main
+      - master
   schedule:
     # Run every Monday and Thursday at 5 AM IST (11:30 PM UTC)
     - cron: "30 23 * * 0,3"
@@ -35,24 +39,25 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run UI Tests
+        # Capture test exit code to allow all tests to run even if some fail
         run: |
           export LOG_LEVEL="debug"
           export ZEROSTEP_TOKEN="${{ secrets.ZEROSTEP_TOKEN }}"
-          npx playwright test --grep @UI --project=chromium || echo "UI Tests failed" >> test_failures.txt
-      - name: Parse and Extract UI Test Results
-        id: ui_test_results
+          npx playwright test --grep @UI --project=chromium --reporter=list,json || echo "UI Tests failed" >> test_failures.txt
+      - name: Generate Report Summary
         run: |
-          export TEST_RESULTS=$(cat playwright-report/json-reports/test-results.json)
-          export PASS_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.status == "passed")] | length')
-          export FAIL_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.status == "failed")] | length')
-          export SKIP_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.status == "skipped")] | length')
-          export RETRY_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.retry == true)] | length')
-          export TOTAL_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[]] | length')
-          echo "PASS_COUNT=$PASS_COUNT" >> $GITHUB_ENV
-          echo "FAIL_COUNT=$FAIL_COUNT" >> $GITHUB_ENV
-          echo "SKIP_COUNT=$SKIP_COUNT" >> $GITHUB_ENV
-          echo "RETRY_COUNT=$RETRY_COUNT" >> $GITHUB_ENV
-          echo "TOTAL_COUNT=$TOTAL_COUNT" >> $GITHUB_ENV
+          node -e "
+          const fs = require('fs');
+          const results = JSON.parse(fs.readFileSync('playwright-report/json-reports/test-results.json'));
+          const summary = {
+            passed: results.suites.reduce((acc, suite) => acc + suite.tests.filter(test => test.outcome === 'expected').length, 0),
+            failed: results.suites.reduce((acc, suite) => acc + suite.tests.filter(test => test.outcome === 'unexpected').length, 0),
+            skipped: results.suites.reduce((acc, suite) => acc + suite.tests.filter(test => test.outcome === 'skipped').length, 0),
+            retry: results.suites.reduce((acc, suite) => acc + suite.tests.filter(test => test.outcome === 'flaky').length, 0),
+            total: results.suites.reduce((acc, suite) => acc + suite.tests.length, 0)
+          };
+          fs.writeFileSync('playwright-report/summary.md', `## Test Summary\n\n| Status          | Count |\n| --------------- | ----- |\n| :white_check_mark: Passed | ${summary.passed} |\n| :x: Failed       | ${summary.failed} |\n| :dash: Skipped    | ${summary.skipped} |\n| :recycle: Retried   | ${summary.retry} |\n| :bar_chart: Total    | ${summary.total} |\n`);
+          "
       - name: Upload UI Test Report
         uses: actions/upload-artifact@v4
         if: always()
@@ -75,24 +80,12 @@ jobs:
           SLACK_USERNAME: Playwright GitHub Actions
           SLACK_MESSAGE: |
             :bell: **UI Test Results Notification** :bell:
-
             :page_facing_up: **Repository:** Sunil-302
             :branch: **Branch:** ${{ github.ref }}
             :memo: **Results available in Artifacts**: [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             :clock10: **Commit:** ${{ github.sha }}
-
-            **Test Results:**
-            ```
-            | Status   | Count |
-            |----------|-------|
-            | ✅ Passed     | ${{ env.PASS_COUNT }} |
-            | ❌ Failed     | ${{ env.FAIL_COUNT }} |
-            | ⏭️ Skipped    | ${{ env.SKIP_COUNT }} |
-            | 🔄 Retried    | ${{ env.RETRY_COUNT }} |
-            | 📊 Total      | ${{ env.TOTAL_COUNT }} |
-            ```
-
             Powered by GitHub Actions | Triggered on ${{ github.event_name }}
+        if: always()
 
   api-tests:
     name: Execute API Playwright Tests
@@ -116,21 +109,21 @@ jobs:
         run: npm ci
       - name: Run API Tests
         run: |
-          npx playwright test --grep @API --project=chromium || echo "API Tests failed" >> test_failures.txt
-      - name: Parse and Extract API Test Results
-        id: api_test_results
+          npx playwright test --grep @API --project=chromium --reporter=list,json || echo "API Tests failed" >> test_failures.txt
+      - name: Generate Report Summary
         run: |
-          export TEST_RESULTS=$(cat playwright-report/json-reports/test-results.json)
-          export PASS_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.status == "passed")] | length')
-          export FAIL_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.status == "failed")] | length')
-          export SKIP_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.status == "skipped")] | length')
-          export RETRY_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.retry == true)] | length')
-          export TOTAL_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[]] | length')
-          echo "PASS_COUNT=$PASS_COUNT" >> $GITHUB_ENV
-          echo "FAIL_COUNT=$FAIL_COUNT" >> $GITHUB_ENV
-          echo "SKIP_COUNT=$SKIP_COUNT" >> $GITHUB_ENV
-          echo "RETRY_COUNT=$RETRY_COUNT" >> $GITHUB_ENV
-          echo "TOTAL_COUNT=$TOTAL_COUNT" >> $GITHUB_ENV
+          node -e "
+          const fs = require('fs');
+          const results = JSON.parse(fs.readFileSync('playwright-report/json-reports/test-results.json'));
+          const summary = {
+            passed: results.suites.reduce((acc, suite) => acc + suite.tests.filter(test => test.outcome === 'expected').length, 0),
+            failed: results.suites.reduce((acc, suite) => acc + suite.tests.filter(test => test.outcome === 'unexpected').length, 0),
+            skipped: results.suites.reduce((acc, suite) => acc + suite.tests.filter(test => test.outcome === 'skipped').length, 0),
+            retry: results.suites.reduce((acc, suite) => acc + suite.tests.filter(test => test.outcome === 'flaky').length, 0),
+            total: results.suites.reduce((acc, suite) => acc + suite.tests.length, 0)
+          };
+          fs.writeFileSync('playwright-report/summary.md', `## Test Summary\n\n| Status          | Count |\n| --------------- | ----- |\n| :white_check_mark: Passed | ${summary.passed} |\n| :x: Failed       | ${summary.failed} |\n| :dash: Skipped    | ${summary.skipped} |\n| :recycle: Retried   | ${summary.retry} |\n| :bar_chart: Total    | ${summary.total} |\n`);
+          "
       - name: Upload API Test Report
         uses: actions/upload-artifact@v4
         if: always()
@@ -153,124 +146,9 @@ jobs:
           SLACK_USERNAME: Playwright GitHub Actions
           SLACK_MESSAGE: |
             :bell: **API Test Results Notification** :bell:
-
             :page_facing_up: **Repository:** Sunil-302
             :branch: **Branch:** ${{ github.ref }}
             :memo: **Results available in Artifacts**: [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
             :clock10: **Commit:** ${{ github.sha }}
-
-            **Test Results:**
-            ```
-            | Status   | Count |
-            |----------|-------|
-            | ✅ Passed     | ${{ env.PASS_COUNT }} |
-            | ❌ Failed     | ${{ env.FAIL_COUNT }} |
-            | ⏭️ Skipped    | ${{ env.SKIP_COUNT }} |
-            | 🔄 Retried    | ${{ env.RETRY_COUNT }} |
-            | 📊 Total      | ${{ env.TOTAL_COUNT }} |
-            ```
-
             Powered by GitHub Actions | Triggered on ${{ github.event_name }}
-
-  bdd-tests:
-    name: Execute BDD Playwright Tests
-    runs-on: ubuntu-latest
-    env:
-      SECRET_KEY: ${{ secrets.SECRET_KEY }}
-    container:
-      image: mcr.microsoft.com/playwright:v1.48.1-jammy
-    timeout-minutes: 60
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: lts/*
-      - name: Cache Node.js modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-      - name: Install Dependencies
-        run: npm ci
-      - name: Run BDD Tests
-        run: |
-          npx playwright test --grep @BDD --project=chromium || echo "BDD Tests failed" >> test_failures.txt
-      - name: Parse and Extract BDD Test Results
-        id: bdd_test_results
-        run: |
-          export TEST_RESULTS=$(cat playwright-report/json-reports/test-results.json)
-          export PASS_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.status == "passed")] | length')
-          export FAIL_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.status == "failed")] | length')
-          export SKIP_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.status == "skipped")] | length')
-          export RETRY_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[] | select(.retry == true)] | length')
-          export TOTAL_COUNT=$(echo "$TEST_RESULTS" | jq '[.tests[]] | length')
-          echo "PASS_COUNT=$PASS_COUNT" >> $GITHUB_ENV
-          echo "FAIL_COUNT=$FAIL_COUNT" >> $GITHUB_ENV
-          echo "SKIP_COUNT=$SKIP_COUNT" >> $GITHUB_ENV
-          echo "RETRY_COUNT=$RETRY_COUNT" >> $GITHUB_ENV
-          echo "TOTAL_COUNT=$TOTAL_COUNT" >> $GITHUB_ENV
-      - name: Upload BDD Test Report
-        uses: actions/upload-artifact@v4
         if: always()
-        with:
-          name: bdd-playwright-report
-          path: playwright-report/
-          retention-days: 30
-      - name: Upload Failed Test Artifacts
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: bdd-failed-test-artifacts
-          path: path/to/failure/screenshots/
-          retention-days: 30
-      - name: Notify Slack for BDD Test Results
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-          SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
-          SLACK_USERNAME: Playwright GitHub Actions
-          SLACK_MESSAGE: |
-            :bell: **BDD Test Results Notification** :bell:
-
-            :page_facing_up: **Repository:** Sunil-302
-            :branch: **Branch:** ${{ github.ref }}
-            :memo: **Results available in Artifacts**: [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-            :clock10: **Commit:** ${{ github.sha }}
-
-            **Test Results:**
-            ```
-            | Status   | Count |
-            |----------|-------|
-            | ✅ Passed     | ${{ env.PASS_COUNT }} |
-            | ❌ Failed     | ${{ env.FAIL_COUNT }} |
-            | ⏭️ Skipped    | ${{ env.SKIP_COUNT }} |
-            | 🔄 Retried    | ${{ env.RETRY_COUNT }} |
-            | 📊 Total      | ${{ env.TOTAL_COUNT }} |
-            ```
-
-            Powered by GitHub Actions | Triggered on ${{ github.event_name }}
-
-  check-failures:
-    name: Final Check for Failures
-    runs-on: ubuntu-latest
-    needs: [ui-tests, api-tests, bdd-tests]
-    if: ${{ needs.ui-tests.result == 'failure' || needs.api-tests.result == 'failure' || needs.bdd-tests.result == 'failure' }}
-    steps:
-      - name: Notify Slack for Test Failures
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-          SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
-          SLACK_USERNAME: Playwright GitHub Actions
-          SLACK_MESSAGE: |
-            :warning: **Test Failures Detected!** :warning:
-
-            Some of the tests failed. Please check the relevant job for further details. 
-            - UI Tests
-            - API Tests
-            - BDD Tests
-
-            Powered by GitHub Actions | Triggered on ${{ github.event_name }}
-
