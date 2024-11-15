@@ -138,11 +138,15 @@ jobs:
       - name: Read Slack Message
         id: read_slack_message
         run: |
-          run: |
-          SLACK_MESSAGE=$(cat ./slack-message.txt)
-          echo "::set-output name=message::$SLACK_MESSAGE"
-          echo "Slack Message Content:"
-          echo "$SLACK_MESSAGE" 
+          if [ -f ./slack-message.txt ]; then
+            SLACK_MESSAGE=$(cat ./slack-message.txt)
+            echo "Slack Message Content:"
+            echo "$SLACK_MESSAGE"
+            echo "SLACK_MESSAGE=$SLACK_MESSAGE" >> $GITHUB_ENV  # Set environment variable for later use
+          else
+            echo "Slack message file does not exist."
+            exit 1
+          fi
 
       # Notify Slack for API Test Results (dynamic message)
       - name: Notify Slack for API Test Results 
@@ -152,7 +156,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }} 
           SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report" 
           SLACK_USERNAME: Playwright GitHub Actions 
-          SLACK_MESSAGE: ${{ steps.read_slack_message.outputs.message }}
+          SLACK_MESSAGE: ${{ env.SLACK_MESSAGE }}
 
   bdd-tests:
     name: Execute BDD Playwright Tests 

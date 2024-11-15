@@ -40,6 +40,7 @@ if (latestReport) {
         
         // Write the formatted message to a file for Slack notification
         fs.writeFileSync("./slack-message.txt", formattedMessage);
+        console.log("Slack message written to slack-message.txt");
     } catch (err) {
         console.error("Error parsing the report:", err);
         process.exit(1);
