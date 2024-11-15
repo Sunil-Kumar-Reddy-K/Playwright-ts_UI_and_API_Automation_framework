@@ -21,7 +21,7 @@ jobs:
       GITHUB_RUN_ID: ${{ github.run_id }}
       GITHUB_EVENT_NAME: ${{ github.event_name }}
     container:
-      image: mcr.microsoft.com/playwright:v1.47.0-jammy
+      image: mcr.microsoft.com/playwright:v1.48.1-jammy
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
@@ -62,7 +62,7 @@ jobs:
       # New Step to Generate Slack Message from JSON Report for UI Tests
       - name: Generate Slack Message for UI Tests
         run: |
-          node lib/slack_reporter.ts
+          npx ts-node lib/slack_reporter.ts
 
       # Notify Slack for UI Test Results (dynamic message)
       - name: Notify Slack for UI Test Results
@@ -121,7 +121,7 @@ jobs:
       # New Step to Generate Slack Message from JSON Report for API Tests 
       - name: Generate Slack Message for API Tests 
         run: |
-          node lib/slack_reporter.ts 
+          npx ts-node lib/slack_reporter.ts 
 
       # Notify Slack for API Test Results (dynamic message)
       - name: Notify Slack for API Test Results 
@@ -182,7 +182,7 @@ jobs:
       # New Step to Generate Slack Message from JSON Report for BDD Tests    
       - name: Generate Slack Message for BDD Tests   
         run: |
-          node lib/slack_reporter.ts    
+          npx ts-node lib/slack_reporter.ts    
 
       # Notify Slack for BDD Test Results (dynamic message)    
       - name: Notify Slack for BDD Test Results    
