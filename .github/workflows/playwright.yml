@@ -15,8 +15,13 @@ jobs:
         runs-on: ubuntu-latest
         env:
             ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
+            GITHUB_REPOSITORY: ${{ github.repository }}
+            GITHUB_RUN_ID: ${{ github.run_id }}
+            GITHUB_EVENT_NAME: ${{ github.event_name }}
         container:
-            image: mcr.microsoft.com/playwright:v1.47.0-jammy
+            image: mcr.microsoft.com/playwright:v1.48.1-jammy
         timeout-minutes: 60
         steps:
             - uses: actions/checkout@v4
@@ -35,7 +40,6 @@ jobs:
             - name: Install Playwright Browsers
               run: npx playwright install --with-deps
             - name: Run UI Tests
-              # Capture test exit code to allow all tests to run even if some fail
               run: |
                   export LOG_LEVEL="debug"
                   export ZEROSTEP_TOKEN="${{ secrets.ZEROSTEP_TOKEN }}"
@@ -54,26 +58,51 @@ jobs:
                   name: ui-failed-test-artifacts
                   path: path/to/failure/screenshots/
                   retention-days: 30
+
+            # New Step to Generate Slack Message from JSON Report for UI Tests
+            - name: Generate Slack Message for UI Tests
+              run: |
+                  npx ts-node lib/slack_reporter.ts
+            - name: Check if Slack Message File Exists
+              id: check_slack_message_ui
+              run: |
+                  if [ -f ./slack-message.txt ]; then
+                    echo "Slack message file exists."
+                    echo "exists=true" >> $GITHUB_ENV
+                  else
+                    echo "Slack message file does not exist."
+                    echo "exists=false" >> $GITHUB_ENV
+                  fi
+            - name: Read Slack Message
+              id: read_slack_message_ui
+              run: |
+                  if [ -f ./slack-message.txt ]; then
+                    SLACK_MESSAGE=$(cat ./slack-message.txt)
+                    echo "Slack Message Content:"
+                    echo "$SLACK_MESSAGE"
+                    echo "SLACK_MESSAGE=$SLACK_MESSAGE" >> $GITHUB_ENV
+                  else
+                    echo "Slack message file does not exist."
+                    exit 1
+                  fi
             - name: Notify Slack for UI Test Results
+              if: env.exists == 'true'
               uses: rtCamp/action-slack-notify@v2
               env:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-                  SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
+                  SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_ui-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: |
-                      :bell: **UI Test Results Notification** :bell:
-
-                      :page_facing_up: **Repository:** Sunil-302
-                      :branch: **Branch:** ${{ github.ref }}
-                      :memo: **Results available in Artifacts**: [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-                      :clock10: **Commit:** ${{ github.sha }}
-
-                      Powered by GitHub Actions | Triggered on ${{ github.event_name }}
-              if: always()
+                  SLACK_MESSAGE: UI Report => ${{ env.SLACK_MESSAGE }}
 
     api-tests:
         name: Execute API Playwright Tests
         runs-on: ubuntu-latest
+        env:
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
+            GITHUB_REPOSITORY: ${{ github.repository }}
+            GITHUB_RUN_ID: ${{ github.run_id }}
+            GITHUB_EVENT_NAME: ${{ github.event_name }}
         container:
             image: node:lts
         timeout-minutes: 60
@@ -108,22 +137,46 @@ jobs:
                   name: api-failed-test-artifacts
                   path: path/to/failure/screenshots/
                   retention-days: 30
+
+            # New Step to Generate Slack Message from JSON Report for API Tests
+            - name: Generate Slack Message for API Tests
+              run: |
+                  npx ts-node lib/slack_reporter.ts
+
+            # Check if slack-message.txt was created before notifying Slack
+            - name: Check if Slack Message File Exists
+              id: check_slack_message_file
+              run: |
+                  if [ -f ./slack-message.txt ]; then
+                    echo "Slack message file exists."
+                    echo "exists=true" >> $GITHUB_ENV
+                  else
+                    echo "Slack message file does not exist."
+                    echo "exists=false" >> $GITHUB_ENV
+                  fi
+
+            - name: Read Slack Message
+              id: read_slack_message
+              run: |
+                  if [ -f ./slack-message.txt ]; then
+                    SLACK_MESSAGE=$(cat ./slack-message.txt)
+                    echo "Slack Message Content:"
+                    echo "$SLACK_MESSAGE"
+                    echo "SLACK_MESSAGE=$SLACK_MESSAGE" >> $GITHUB_ENV  # Set environment variable for later use
+                  else
+                    echo "Slack message file does not exist."
+                    exit 1
+                  fi
+
+            # Notify Slack for API Test Results (dynamic message)
             - name: Notify Slack for API Test Results
+              if: env.exists == 'true' # Only run this step if slack-message.txt exists.
               uses: rtCamp/action-slack-notify@v2
               env:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
                   SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: |
-                      :bell: **API Test Results Notification** :bell:
-
-                      :page_facing_up: **Repository:** Sunil-302
-                      :branch: **Branch:** ${{ github.ref }}
-                      :memo: **Results available in Artifacts**: [View Artifacts](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-                      :clock10: **Commit:** ${{ github.sha }}
-
-                      Powered by GitHub Actions | Triggered on ${{ github.event_name }}
-              if: always()
+                  SLACK_MESSAGE: API Reports => ${{ env.SLACK_MESSAGE }}
 
     bdd-tests:
         name: Execute BDD Playwright Tests
@@ -170,22 +223,41 @@ jobs:
                   name: bdd-failed-test-artifacts
                   path: path/to/failure/screenshots/
                   retention-days: 30
+
+            # New Step to Generate Slack Message from JSON Report for BDD Tests
+            - name: Generate Slack Message for BDD Tests
+              run: |
+                  npx ts-node lib/slack_reporter.ts
+            - name: Check if Slack Message File Exists
+              id: check_slack_message_bdd
+              run: |
+                  if [ -f ./slack-message.txt ]; then
+                    echo "Slack message file exists."
+                    echo "exists=true" >> $GITHUB_ENV
+                  else
+                    echo "Slack message file does not exist."
+                    echo "exists=false" >> $GITHUB_ENV
+                  fi
+            - name: Read Slack Message
+              id: read_slack_message_bdd
+              run: |
+                  if [ -f ./slack-message.txt ]; then
+                    SLACK_MESSAGE=$(cat ./slack-message.txt)
+                    echo "Slack Message Content:"
+                    echo "$SLACK_MESSAGE"
+                    echo "SLACK_MESSAGE=$SLACK_MESSAGE" >> $GITHUB_ENV
+                  else
+                    echo "Slack message file does not exist."
+                    exit 1
+                  fi
             - name: Notify Slack for BDD Test Results
+              if: env.exists == 'true'
               uses: rtCamp/action-slack-notify@v2
               env:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
-                  SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
+                  SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_bdd-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: |
-                      :blue_book: **BDD Test Results** :blue_book:
-
-                      :page_facing_up: **Repository:** Sunil-302
-                      :branch: **Branch:** ${{ github.ref }}
-                      :link: [View Results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-                      :clock10: **Commit:** ${{ github.sha }}
-
-                      Powered by GitHub Actions | Triggered on ${{ github.event_name }}
-              if: always()
+                  SLACK_MESSAGE: BDD Report => ${{ env.SLACK_MESSAGE }}
 
     # Final step to check for any failures across all test jobs
     check-failures:
@@ -200,4 +272,3 @@ jobs:
                   else
                     echo "All tests passed successfully."
                   fi
-                  

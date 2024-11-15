@@ -52,14 +52,16 @@ export default defineConfig({
     ? [ 
         ["list"], // Minimal reporter for CI
         ["html", { outputFolder: `playwright-report/html-reports/report_${timestamp}` }],
-        ["json", { outputFile: `playwright-report/json-reports/test-results.json` }] 
+        ['./custom_reporter/json_reporter.ts'] 
       ] 
     : [ 
         ["list"], // More detailed local report
         ["html", { outputFolder: `playwright-report/html-reports/report_${timestamp}` }], 
         ["ortoni-report", reportConfig],
-        ['./custom-reporter.ts'],
-        ["json", { outputFile: `playwright-report/json-reports/test-results_${timestamp}.json` }]
+        // ['./custom_reporter/txt_reporter.ts'],
+        ['./custom_reporter/json_reporter.ts'],
+
+        // ["json", { outputFile: `playwright-report/json-reports/test-results_${timestamp}.json` }]
       ],
 
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
