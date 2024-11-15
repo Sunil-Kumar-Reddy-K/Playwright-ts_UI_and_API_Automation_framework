@@ -57,7 +57,9 @@ export default defineConfig({
     : [ 
         ["list"], // More detailed local report
         ["html", { outputFolder: `playwright-report/html-reports/report_${timestamp}` }], 
-        ["ortoni-report", reportConfig] 
+        ["ortoni-report", reportConfig],
+        ['./custom-reporter.ts'],
+        ["json", { outputFile: `playwright-report/json-reports/test-results_${timestamp}.json` }]
       ],
 
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
