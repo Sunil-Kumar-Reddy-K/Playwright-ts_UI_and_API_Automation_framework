@@ -48,7 +48,18 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 3 : 3,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [ ["list"], ["html", { outputFolder: `playwright-report/html-reports/report_${timestamp}` }],['./custom-reporter.ts'], ["ortoni-report", reportConfig]],
+  reporter: process.env.CI 
+    ? [ 
+        ["list"], // Minimal reporter for CI
+        ["html", { outputFolder: `playwright-report/html-reports/report_${timestamp}` }],
+        ["json", { outputFile: `playwright-report/json-reports/test-results.json` }] 
+      ] 
+    : [ 
+        ["list"], // More detailed local report
+        ["html", { outputFolder: `playwright-report/html-reports/report_${timestamp}` }], 
+        ["ortoni-report", reportConfig] 
+      ],
+
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
