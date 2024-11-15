@@ -1,3 +1,6 @@
+/**
+ * @BDD_Documentation - https://vitalets.github.io/playwright-bdd/#/writing-steps/playwright-style
+ */
 import { Homepage } from "../../pages/homepage";
 import { Cart } from "../../pages/cart";
 import { RIVERSIDE_LoginPage } from "../../pages/riverside_page";
