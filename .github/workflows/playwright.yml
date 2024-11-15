@@ -121,7 +121,7 @@ jobs:
       # New Step to Generate Slack Message from JSON Report for API Tests 
       - name: Generate Slack Message for API Tests 
         run: |
-          node lib/slack_reporter.ts 
+          npx ts-node lib/slack_reporter.ts 
 
       # Check if slack-message.txt was created before notifying Slack
       - name: Check if Slack Message File Exists
@@ -141,6 +141,8 @@ jobs:
           run: |
           SLACK_MESSAGE=$(cat ./slack-message.txt)
           echo "::set-output name=message::$SLACK_MESSAGE"
+          echo "Slack Message Content:"
+          echo "$SLACK_MESSAGE" 
 
       # Notify Slack for API Test Results (dynamic message)
       - name: Notify Slack for API Test Results 
