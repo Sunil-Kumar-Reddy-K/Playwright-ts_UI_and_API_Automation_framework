@@ -2,8 +2,9 @@ import fs from "fs";
 import path from "path";
 
 // Adjust this path to match where your JSON report is saved
-const reportPath = path.resolve(__dirname, "../custom_reporter/custom-report_*.json");
-
+const reportPath = path.resolve(
+    "playwright-report/custom-reporter/custom-report_*.json",
+);
 const files = fs
     .readdirSync(path.dirname(reportPath))
     .filter((file) => file.startsWith("custom-report_"));
