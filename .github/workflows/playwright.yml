@@ -92,7 +92,7 @@ jobs:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
                   SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_ui-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: UI Report => ${{ env.SLACK_MESSAGE }}
+                  SLACK_MESSAGE: 🧑🏻‍💻 UI Report => ${{ env.SLACK_MESSAGE }}
 
     api-tests:
         name: Execute API Playwright Tests
