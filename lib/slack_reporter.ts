@@ -22,7 +22,7 @@ if (latestReport) {
         console.log("Report Data:", report); // Log the parsed data
 
         // Create a simple text message without any formatting
-        const formattedMessage = `⏰ Time and Date of Execution: ${report.runTimestamp} | ✅ Passed: ${report.passed} | ❌ Failed: ${report.failed} | ⏩ Skipped: ${report.skipped} | 🔃 Retried: ${report.retried || 0} | 🧮 Total: ${report.totalTests} | ⌛ Total Execution Duration: ${report.totalDuration || "N/A"} | Results available in Artifacts: [View Artifacts](https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}) | Triggered on: \`${process.env.GITHUB_EVENT_NAME}\``;
+        const formattedMessage = `⏰ Time and Date of Execution: ${report.runTimestamp} | ✅ Passed: ${report.passed} | ☢️ Failed: ${report.failed} | ⏩ Skipped: ${report.skipped} | ♻️ Retried: ${report.retried || 0} | 🧮 Total: ${report.totalTests} | ⌛ Total Execution Duration: ${report.totalDuration || "N/A"} | 📑 Results available in Artifacts: 🔗 (https://github.com/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}) | 🛰️ Triggered on: \`${process.env.GITHUB_EVENT_NAME}\``;
 
         // Write the formatted message to a file for Slack notification
         fs.writeFileSync("./slack-message.txt", formattedMessage);
