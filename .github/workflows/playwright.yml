@@ -1,8 +1,8 @@
 name: Playwright Tests
 
 on:
-    push:
-        branches: [main, master]
+    # push:
+    #     branches: [main, master]
     pull_request:
         branches: [main, master]
     schedule:
@@ -92,7 +92,7 @@ jobs:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
                   SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_ui-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: UI Report => ${{ env.SLACK_MESSAGE }}
+                  SLACK_MESSAGE: 🧑🏻‍💻 UI Report => ${{ env.SLACK_MESSAGE }}
 
     api-tests:
         name: Execute API Playwright Tests
@@ -176,7 +176,7 @@ jobs:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
                   SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_api-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: API Reports => ${{ env.SLACK_MESSAGE }}
+                  SLACK_MESSAGE: 👨🏻‍🍳 API Reports => ${{ env.SLACK_MESSAGE }}
 
     bdd-tests:
         name: Execute BDD Playwright Tests
@@ -257,7 +257,7 @@ jobs:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
                   SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_bdd-run_report"
                   SLACK_USERNAME: Playwright GitHub Actions
-                  SLACK_MESSAGE: BDD Report => ${{ env.SLACK_MESSAGE }}
+                  SLACK_MESSAGE: 🎭 BDD Report => ${{ env.SLACK_MESSAGE }}
 
     # Final step to check for any failures across all test jobs
     check-failures:
