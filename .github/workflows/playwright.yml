@@ -231,7 +231,7 @@ jobs:
               with:
                 name: BDD Playwright Test Results
                 path: playwright-report/json-reports/test-results_*.json
-                reporter: playwright-json
+                reporter: json
                 fail-on-error: true
                 path-replace-backslashes: false
                 list-suites: all
