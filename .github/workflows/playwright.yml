@@ -230,8 +230,8 @@ jobs:
               uses: dorny/test-reporter@v1
               with:
                 name: BDD Playwright Test Results
-                path: playwright-report/json-reports/test-results_*.json
-                reporter: jest
+                path: playwright-report/junit-reports/test-results_*.xml
+                reporter: junit
                 fail-on-error: true
                 path-replace-backslashes: false
                 list-suites: all
