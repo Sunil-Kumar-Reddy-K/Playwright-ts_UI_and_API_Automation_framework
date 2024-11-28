@@ -211,8 +211,9 @@ jobs:
               run: export ENV="ci" && npx playwright test --project=bdd_chromium || echo "BDD Tests failed" >> test_failures.txt
 
                   # New step to publish CTRF report.
+             # New step to publish CTRF report.
             - name: Publish CTRF Test Summary Results 
-              run: npx github-actions-ctrf bdd-results.json
+              run: npx github-actions-ctrf playwright-report/json-reports/test-results_*.json
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
