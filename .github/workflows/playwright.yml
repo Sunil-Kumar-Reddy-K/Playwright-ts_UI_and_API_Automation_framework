@@ -213,7 +213,7 @@ jobs:
                   # New step to publish CTRF report.
              # New step to publish CTRF report.
             - name: Publish CTRF Test Summary Results 
-              run: npx github-actions-ctrf playwright-report/json-reports/test-results_*.json
+              run: npx github-actions-ctrf playwright-report/ctrf-reports/test-results_*.json
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
