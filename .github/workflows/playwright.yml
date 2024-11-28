@@ -223,6 +223,15 @@ jobs:
                   name: bdd-failed-test-artifacts
                   path: path/to/failure/screenshots/
                   retention-days: 30
+            # Add Test Reporter Step for Parsing BDD Results
+            - name: Parse and Report Test Results
+              uses: dorny/test-reporter@v1
+              with:
+                  name: BDD Playwright Test Results
+                  path: playwright-report/json-reports/test-results_*.json
+                  reporter: playwright-json
+                  fail-on-error: true # Fail the pipeline if tests fail
+
 
             # New Step to Generate Slack Message from JSON Report for BDD Tests
             - name: Generate Slack Message for BDD Tests

@@ -1,4 +1,3 @@
-# language: en
 @eCommerce @BDD @mode:parallel
 Feature: greenKart eCommerce
 
@@ -13,13 +12,14 @@ Feature: greenKart eCommerce
       | Carrot   |
       | Tomato   |
       | Beans    |
+      | Guava    |
 
   @gk_E2e @timeout:20000 @retries:2
   Scenario Outline: Add product to cart
     Given I open url "https://rahulshettyacademy.com/seleniumPractise/#"
     When I will be searching for the "<items>" and adding to the cart
-
     # title-format: item - <items>
+
     Examples:
       | items    |
       | Beetroot |
