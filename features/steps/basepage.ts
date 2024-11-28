@@ -25,5 +25,5 @@ const test = base.extend<{
 });
 
 // Integrate BDD functionality
-export const { Given, When, Then } = createBdd(test);
+export const { Given, When, Then, Step, Before, After, BeforeAll, AfterAll } = createBdd(test);
 export default test;

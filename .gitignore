@@ -12,3 +12,4 @@ env/*.local
 
 # BDD
 **/.features-gen/**/*.spec.js
+secret
