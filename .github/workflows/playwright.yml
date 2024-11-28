@@ -230,8 +230,8 @@ jobs:
               uses: dorny/test-reporter@v1
               with:
                 name: BDD Playwright Test Results
-                path: playwright-report/junit-reports/test-results_*.xml
-                reporter: jest-junit
+                path: playwright-report/json-reports/test-results_*.json
+                reporter: mocha-json
                 fail-on-error: true
                 path-replace-backslashes: false
                 list-suites: all
@@ -239,7 +239,7 @@ jobs:
                 max-annotations: 10
                 fail-on-empty: true
                 only-summary: false
-                token: ${{ secrets.GITHUB_TOKEN }}
+                token: ${{ secrets.GITHUB_TOKEN }}       
 
 
             # New Step to Generate Slack Message from JSON Report for BDD Tests
