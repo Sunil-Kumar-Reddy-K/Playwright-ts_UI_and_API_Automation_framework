@@ -223,24 +223,6 @@ jobs:
                   name: bdd-failed-test-artifacts
                   path: path/to/failure/screenshots/
                   retention-days: 30
-            # Add Test Reporter Step for Parsing BDD Results
-            - name: Configure Git Safe Directory
-              run: git config --global --add safe.directory /__w/Playwright-ts_UI_and_API_Automation_framework/Playwright-ts_UI_and_API_Automation_framework
-            - name: dorny/test-reporter@v1
-              uses: dorny/test-reporter@v1
-              with:
-                name: BDD Playwright Test Results
-                path: playwright-report/json-reports/test-results_*.json
-                reporter: mocha-json
-                fail-on-error: true
-                path-replace-backslashes: false
-                list-suites: all
-                list-tests: all
-                max-annotations: 10
-                fail-on-empty: true
-                only-summary: false
-                token: ${{ secrets.GITHUB_TOKEN }}       
-
 
             # New Step to Generate Slack Message from JSON Report for BDD Tests
             - name: Generate Slack Message for BDD Tests
