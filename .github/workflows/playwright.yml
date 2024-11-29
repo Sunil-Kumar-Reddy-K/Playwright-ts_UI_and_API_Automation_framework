@@ -44,6 +44,20 @@ jobs:
                   export LOG_LEVEL="debug"
                   export ZEROSTEP_TOKEN="${{ secrets.ZEROSTEP_TOKEN }}"
                   npx playwright test --grep @UI --project=chromium || echo "UI Tests failed" >> test_failures.txt
+
+            # New step to publish CTRF report.
+            - name: Publish CTRF Test Summary Results
+              run: npm run ctrf-report
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Publish CTRF ai  Results
+              run: npm run ctrf-ai-report
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
             - name: Upload UI Test Report
               uses: actions/upload-artifact@v4
               if: always()
@@ -123,6 +137,20 @@ jobs:
             - name: Run API Tests
               run: |
                   npx playwright test --grep @API --project=chromium || echo "API Tests failed" >> test_failures.txt
+
+            # New step to publish CTRF report.
+            - name: Publish CTRF Test Summary Results
+              run: npm run ctrf-report
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Publish CTRF ai  Results
+              run: npm run ctrf-ai-report
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
             - name: Upload API Test Report
               uses: actions/upload-artifact@v4
               if: always()
@@ -210,12 +238,18 @@ jobs:
             - name: Run BDD Tests
               run: export ENV="ci" && npx playwright test --project=bdd_chromium || echo "BDD Tests failed" >> test_failures.txt
 
-            # New step to publish CTRF report.            
-            - name: Publish CTRF ai  Results 
+            # New step to publish CTRF report.
+            - name: Publish CTRF Test Summary Results
+              run: npm run ctrf-report
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Publish CTRF ai  Results
               run: npm run ctrf-ai-report
               if: always()
               env:
-                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Upload BDD Test Report
               uses: actions/upload-artifact@v4
