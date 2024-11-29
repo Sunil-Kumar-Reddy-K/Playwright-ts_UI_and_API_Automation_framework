@@ -53,8 +53,9 @@ export default defineConfig({
         ["list"], // Minimal reporter for CI
         ["html", { outputFolder: `playwright-report/html-reports/report_${timestamp}` }],
         ['./custom_reporter/json_reporter.ts'],
+        ['playwright-ctrf-json-reporter', {outputFile: `playwright-report/ctrf-reports/test-results_${timestamp}.json`}],
         // ["json", { outputFile: `playwright-report/json-reports/test-results_${timestamp}.json` }],
-        // ["junit", { outputFile: `playwright-report/junit-reports/test-results_${timestamp}.xml` }] 
+        ['playwright-ctrf-json-reporter', {outputDir: `playwright-report/ctrf-reports`, outputFile: `test-results.json`}],
       ] 
     : [ 
         ["list"], // More detailed local report
@@ -62,7 +63,7 @@ export default defineConfig({
         ["ortoni-report", reportConfig],
         // ['./custom_reporter/txt_reporter.ts'],
         ['./custom_reporter/json_reporter.ts'],
-
+        // ['playwright-ctrf-json-reporter', {outputDir: `playwright-report/ctrf-reports`, outputFile: `test-results.json`}],
         // ["json", { outputFile: `playwright-report/json-reports/test-results_${timestamp}.json` }]
       ],
 
