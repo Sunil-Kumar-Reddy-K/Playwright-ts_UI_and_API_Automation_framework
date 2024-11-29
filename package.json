@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "ctrf-report": "github-actions-ctrf playwright-report/ctrf-reports/test-results_*.json",
-        "ctrf-ai-report": "github-actions-ctrf playwright-report/ctrf-reports/test-results_*.json"
+        "ctrf-ai-report": "github-actions-ctrf ai playwright-report/ctrf-reports/test-results_*.json"
     },
     "keywords": [],
     "author": "",

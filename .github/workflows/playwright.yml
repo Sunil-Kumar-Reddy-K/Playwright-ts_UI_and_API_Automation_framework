@@ -212,14 +212,14 @@ jobs:
 
             # New step to publish CTRF report.
             - name: Publish CTRF Test Summary Results 
-              run: npx run ctrf-report
+              run: npm run ctrf-report
               if: always()
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             
             # New step to publish CTRF report.
             - name: Publish CTRF ai  Results 
-              run: npx run ctrf-ai-report
+              run: npm run ctrf-ai-report
               if: always()
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
