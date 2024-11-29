@@ -53,6 +53,7 @@ export default defineConfig({
         ["list"], // Minimal reporter for CI
         ["html", { outputFolder: `playwright-report/html-reports/report_${timestamp}` }],
         ['./custom_reporter/json_reporter.ts'],
+        ['playwright-ctrf-json-reporter', {outputFile: `playwright-report/ctrf-reports/test-results_${timestamp}.json`}],
         // ["json", { outputFile: `playwright-report/json-reports/test-results_${timestamp}.json` }],
         // ["junit", { outputFile: `playwright-report/junit-reports/test-results_${timestamp}.xml` }] 
       ] 

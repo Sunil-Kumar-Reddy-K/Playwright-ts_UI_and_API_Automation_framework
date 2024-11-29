@@ -209,6 +209,14 @@ jobs:
                   if [ -d ".features-gen/features" ]; then echo "Features directory exists"; else echo "Error: Features directory missing"; exit 1; fi
             - name: Run BDD Tests
               run: export ENV="ci" && npx playwright test --project=bdd_chromium || echo "BDD Tests failed" >> test_failures.txt
+
+                  # New step to publish CTRF report.
+             # New step to publish CTRF report.
+            - name: Publish CTRF Test Summary Results 
+              run: npx github-actions-ctrf playwright-report/ctrf-reports/test-results_*.json
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
             - name: Upload BDD Test Report
               uses: actions/upload-artifact@v4
               if: always()
