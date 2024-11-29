@@ -12,7 +12,7 @@ Feature: greenKart eCommerce
       | Carrot   |
       | Tomato   |
       | Beans    |
-      # | Guava    |
+      | Guava    |
 
   @gk_E2e @timeout:20000 @retries:2
   Scenario Outline: Add product to cart

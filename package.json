@@ -1,36 +1,39 @@
 {
-  "name": "greenkartautomation",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@eslint/js": "^9.13.0",
-    "@playwright/test": "^1.48.1",
-    "@types/eslint__js": "^8.42.3",
-    "@types/node": "^20.14.8",
-    "@types/pdf-parse": "^1.1.4",
-    "@typescript-eslint/eslint-plugin": "^8.10.0",
-    "@typescript-eslint/parser": "^8.10.0",
-    "@zerostep/playwright": "^0.1.5",
-    "eslint": "^9.13.0",
-    "playwright-bdd": "^7.5.0",
-    "playwright-ctrf-json-reporter": "^0.0.18",
-    "prettier": "3.3.3",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.10.0"
-  },
-  "dependencies": {
-    "@vitalets/google-translate-api": "^9.2.0",
-    "dotenv": "^16.4.5",
-    "http-proxy-agent": "^7.0.2",
-    "moment": "^2.30.1",
-    "ortoni-report": "^2.0.8",
-    "pdf-parse": "^1.1.1",
-    "tesseract.js": "^5.1.1",
-    "winston": "^3.14.2"
-  }
+    "name": "greenkartautomation",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "ctrf-report": "github-actions-ctrf playwright-report/ctrf-reports/test-results_*.json",
+        "ctrf-ai-report": "github-actions-ctrf playwright-report/ctrf-reports/test-results_*.json"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@eslint/js": "^9.13.0",
+        "@playwright/test": "^1.48.1",
+        "@types/eslint__js": "^8.42.3",
+        "@types/node": "^20.14.8",
+        "@types/pdf-parse": "^1.1.4",
+        "@typescript-eslint/eslint-plugin": "^8.10.0",
+        "@typescript-eslint/parser": "^8.10.0",
+        "@zerostep/playwright": "^0.1.5",
+        "eslint": "^9.13.0",
+        "playwright-bdd": "^7.5.0",
+        "playwright-ctrf-json-reporter": "^0.0.18",
+        "prettier": "3.3.3",
+        "typescript": "^5.6.3",
+        "typescript-eslint": "^8.10.0"
+    },
+    "dependencies": {
+        "@vitalets/google-translate-api": "^9.2.0",
+        "dotenv": "^16.4.5",
+        "http-proxy-agent": "^7.0.2",
+        "moment": "^2.30.1",
+        "ortoni-report": "^2.0.8",
+        "pdf-parse": "^1.1.1",
+        "tesseract.js": "^5.1.1",
+        "winston": "^3.14.2"
+    }
 }

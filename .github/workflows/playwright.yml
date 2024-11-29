@@ -210,10 +210,17 @@ jobs:
             - name: Run BDD Tests
               run: export ENV="ci" && npx playwright test --project=bdd_chromium || echo "BDD Tests failed" >> test_failures.txt
 
-                  # New step to publish CTRF report.
-             # New step to publish CTRF report.
+            # New step to publish CTRF report.
             - name: Publish CTRF Test Summary Results 
-              run: npx github-actions-ctrf playwright-report/ctrf-reports/test-results_*.json
+              run: npx run ctrf-report
+              if: always()
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            
+            # New step to publish CTRF report.
+            - name: Publish CTRF ai  Results 
+              run: npx run ctrf-ai-report
+              if: always()
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

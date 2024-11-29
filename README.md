@@ -212,3 +212,5 @@ $env:LOG_LEVEL = "debug"; $env:ZEROSTEP_TOKEN = "0step:2bee65c6-9cc5-4e29-8eaa-0
 > .env implementation , [text](https://www.npmjs.com/package/dotenv) "https://www.youtube.com/watch?v=OpxLilD600I&ab_channel=CommitQuality"
 
 > just run one file like unit test ex crypti is "ts-node lib\cryptoUtils.ts"
+
+> ctrf- report, [text](https://ctrf.io/docs/intro) > checked for playwright and git hub 
