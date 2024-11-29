@@ -4,8 +4,8 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "ctrf-report": "github-actions-ctrf playwright-report/ctrf-reports/test-results_*.json",
-        "ctrf-ai-report": "github-actions-ctrf ai playwright-report/ctrf-reports/test-results_*.json"
+        "ctrf-report": "npx github-actions-ctrf playwright-report/ctrf-reports/test-results.json",
+        "ctrf-ai-report": "npx github-actions-ctrf ai playwright-report/ctrf-reports/test-results.json"
     },
     "keywords": [],
     "author": "",
