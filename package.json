@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "ctrf-report": "npx github-actions-ctrf playwright-report/ctrf-reports/test-results.json",
-        "ctrf-ai-report": "npx github-actions-ctrf ai playwright-report/ctrf-reports/test-results.json"
+        "ctrf-ai-report": "npx github-actions-ctrf ai playwright-report/ctrf-reports/test-results.json",
+        "prettier": "npx prettier --write .github features pages tests --ignore-path .gitignore"
     },
     "keywords": [],
     "author": "",

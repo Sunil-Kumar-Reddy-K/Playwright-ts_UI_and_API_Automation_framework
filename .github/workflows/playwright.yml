@@ -108,6 +108,104 @@ jobs:
                   SLACK_USERNAME: Playwright GitHub Actions
                   SLACK_MESSAGE: 🧑🏻‍💻 UI Report => ${{ env.SLACK_MESSAGE }}
 
+    ai-tests:
+        name: Execute AI Playwright Tests
+        runs-on: ubuntu-latest
+        env:
+            ZEROSTEP_TOKEN: ${{ secrets.ZEROSTEP_TOKEN }}
+            GITHUB_REF: ${{ github.ref }}
+            GITHUB_SHA: ${{ github.sha }}
+            GITHUB_REPOSITORY: ${{ github.repository }}
+            GITHUB_RUN_ID: ${{ github.run_id }}
+            GITHUB_EVENT_NAME: ${{ github.event_name }}
+        container:
+            image: mcr.microsoft.com/playwright:v1.48.1-jammy
+        timeout-minutes: 60
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: lts/*
+            - name: Cache Node.js modules
+              uses: actions/cache@v4
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
+            - name: Install Dependencies
+              run: npm ci
+            - name: Install Playwright Browsers
+              run: npx playwright install --with-deps
+            - name: Run AI Tests
+              run: |
+                  export LOG_LEVEL="debug"
+                  export ZEROSTEP_TOKEN="${{ secrets.ZEROSTEP_TOKEN }}"
+                  npx playwright test --grep @AI --project=chromium || echo "AI Tests failed" >> test_failures.txt
+
+            # New step to publish CTRF report.
+            - name: Publish CTRF Test Summary Results
+              run: npm run ctrf-report
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Publish CTRF ai  Results # Donr confuse zero step ai with the ctrf ai , one is wrt automation and other is ci/cd report related
+              run: npm run ctrf-ai-report
+              if: always()
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Upload UI Test Report
+              uses: actions/upload-artifact@v4
+              if: always()
+              with:
+                  name: ai-playwright-report
+                  path: playwright-report/
+                  retention-days: 30
+            - name: Upload Failed Test Artifacts
+              uses: actions/upload-artifact@v4
+              if: failure()
+              with:
+                  name: ai-failed-test-artifacts
+                  path: path/to/failure/screenshots/
+                  retention-days: 30
+
+            # New Step to Generate Slack Message from JSON Report for UI Tests
+            - name: Generate Slack Message for AI Tests
+              run: |
+                  npx ts-node lib/slack_reporter.ts
+            - name: Check if Slack Message File Exists
+              id: check_slack_message_ui
+              run: |
+                  if [ -f ./slack-message.txt ]; then
+                    echo "Slack message file exists."
+                    echo "exists=true" >> $GITHUB_ENV
+                  else
+                    echo "Slack message file does not exist."
+                    echo "exists=false" >> $GITHUB_ENV
+                  fi
+            - name: Read Slack Message
+              id: read_slack_message_ui
+              run: |
+                  if [ -f ./slack-message.txt ]; then
+                    SLACK_MESSAGE=$(cat ./slack-message.txt)
+                    echo "Slack Message Content:"
+                    echo "$SLACK_MESSAGE"
+                    echo "SLACK_MESSAGE=$SLACK_MESSAGE" >> $GITHUB_ENV
+                  else
+                    echo "Slack message file does not exist."
+                    exit 1
+                  fi
+            - name: Notify Slack for AI Test Results
+              if: env.exists == 'true'
+              uses: rtCamp/action-slack-notify@v2
+              env:
+                  SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
+                  SLACK_CHANNEL: "#automate_greenkart_using_playwright_ts_ui-run_report"
+                  SLACK_USERNAME: Playwright GitHub Actions
+                  SLACK_MESSAGE: 🧠 AI Report => ${{ env.SLACK_MESSAGE }}
+
     api-tests:
         name: Execute API Playwright Tests
         runs-on: ubuntu-latest

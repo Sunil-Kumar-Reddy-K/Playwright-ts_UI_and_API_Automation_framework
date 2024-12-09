@@ -2,7 +2,7 @@ import test from "../../features/steps/basepage";
 
 test(
     "Place an order and complete payment",
-    { tag: "@UI" },
+    { tag: "@AI" },
     async ({ page, ai }) => {
         test.slow();
         await page.goto("https://rahulshettyacademy.com/seleniumPractise/");

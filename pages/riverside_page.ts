@@ -28,7 +28,9 @@ export class RIVERSIDE_LoginPage {
         this.USERNAME_INPUTBOX = page.getByPlaceholder("Username");
         this.PASSWORD_INPUTBOX = page.getByPlaceholder("Password");
         this.SIGNIN_BUTTON = page.getByRole("button", { name: "Sign In" });
-        this.TEST_ASSSIGNMENTS_HEADING = page.locator('//div[@class="main-container"]//h1');
+        this.TEST_ASSSIGNMENTS_HEADING = page.locator(
+            '//div[@class="main-container"]//h1',
+        );
         this.WJV_TILE = page.getByLabel("Woodcock Johnson V");
         this.EXAMINEES_HEADER = page.locator(
             '//button[@aria-label="Examinees"]',
@@ -37,7 +39,9 @@ export class RIVERSIDE_LoginPage {
         this.EXAMINEE_MANAGEMENT_HEADING = page.getByRole("heading", {
             name: "EXAMINEE MANAGEMENT",
         }); // Chaining Locators
-        this.NOTIFICATION_CENTER = page.locator('//div[@class="WJVHome_mcs_box"]');
+        this.NOTIFICATION_CENTER = page.locator(
+            '//div[@class="WJVHome_mcs_box"]',
+        );
         this.REGISTRATION_FORM_CLOSE_BUTTON = page.getByRole("button", {
             name: "Close",
         });
@@ -97,19 +101,18 @@ export class RIVERSIDE_LoginPage {
     }
 
     async changeTheHeaderTextTo(text: string) {
-
         /**
          * Overview of the evaluate() Method
             The evaluate() method in Playwright allows you to execute JavaScript code within the context of a web page.
             This is useful for manipulating the DOM, executing custom functions, and accessing or modifying global variables.
          */
         const element: Locator = this.TEST_ASSSIGNMENTS_HEADING; // Selecting <h1> element
-    
+
         if (element) {
             await element.evaluate((element, newText) => {
                 element.innerHTML = newText; // Set innerHTML to newText
             }, text); // Pass text as an argument
-        }    
+        }
     }
 
     async assertTheText(text: string) {
@@ -117,34 +120,30 @@ export class RIVERSIDE_LoginPage {
     }
 
     async verifyNotificationCenterBorderStyle() {
-         /**
+        /**
          * @PerplexityLink = https://www.perplexity.ai/search/i-want-u-to-go-through-the-fol-JRYGnW2bS4ObygN1Huil2A
          */
-        
+
         const notificationCenter: Locator = this.NOTIFICATION_CENTER;
 
         const borderStyle = await notificationCenter.evaluate((element) => {
             const computedStyle = window.getComputedStyle(element);
             return `borderWidth= ${computedStyle.borderWidth}, borderStyle= ${computedStyle.borderStyle}`;
-
-        })
+        });
 
         console.log("The border style = ", borderStyle);
     }
 
-    async navigateTo(url: string){
+    async navigateTo(url: string) {
         /**
          * @PerplexityLink = https://www.perplexity.ai/search/i-want-u-to-go-through-the-fol-JRYGnW2bS4ObygN1Huil2A
          */
         await this.page.evaluate((newURL) => {
             window.location.href = newURL; // Redirecting to another site
-        },url);
-    
+        }, url);
+
         // Wait for navigation to complete
         await this.page.waitForLoadState("networkidle");
         expect(this.page.url()).toBe(url);
-    
-
-
     }
 }
