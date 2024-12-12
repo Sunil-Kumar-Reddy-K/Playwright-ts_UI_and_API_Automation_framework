@@ -2,7 +2,7 @@ import test from "../../features/steps/basepage";
 
 test(
     "Register account with AI-generated data",
-    { tag: "@UI" },
+    { tag: "@AI" },
     async ({ page, ai }) => {
         test.slow();
 
