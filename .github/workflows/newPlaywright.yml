@@ -51,7 +51,7 @@ jobs:
         if: steps.cache-playwright.outputs.cache-hit != 'true'
         run: npx playwright install --with-deps
 
-      - name: Run Playwright tests
+      - name: Run Playwright tests --project=chromium
         continue-on-error: true
         run: |
           npx playwright test
