@@ -212,6 +212,105 @@ If the package is uninstalled successfully, you should see a message indicating 
 npm prune
 ```
 
+
+# npm audit Security Guide
+
+`npm audit` is a powerful security tool that automatically scans your project's dependencies for known vulnerabilities. It checks your dependency tree against the Node.js Security Platform database of known vulnerabilities.
+
+## Basic Commands
+
+### Check for Vulnerabilities
+```bash
+npm audit
+```
+This command:
+- Scans your project's dependencies
+- Returns a detailed report of found vulnerabilities
+- Provides remediation suggestions
+- Shows the path to vulnerable dependencies
+
+### Fix Vulnerabilities Automatically
+```bash
+npm audit fix
+```
+This command:
+- Automatically upgrades packages to non-vulnerable versions
+- Updates your package.json and package-lock.json
+- Only performs safe updates that don't break your existing code
+
+### Force Fix with Breaking Changes
+```bash
+npm audit fix --force
+```
+This command:
+- Installs breaking changes if required to fix vulnerabilities
+- May affect your application's functionality
+- Should be used with caution and proper testing
+
+### Generate JSON Report
+```bash
+npm audit --json
+```
+This command:
+- Outputs the audit report in JSON format
+- Useful for automated tools and CI/CD pipelines
+- Provides machine-readable vulnerability information
+
+### Produce Only the Summary
+```bash
+npm audit --summary
+```
+This command:
+- Shows a brief overview of found vulnerabilities
+- Omits detailed information about individual vulnerabilities
+- Perfect for quick security checks
+
+## Benefits of npm audit
+
+### Security Enhancement
+- Identifies known vulnerabilities in dependencies
+- Helps maintain secure applications
+- Provides early warning of security issues
+
+### Risk Management
+- Assesses the severity of vulnerabilities
+- Helps prioritize security updates
+- Provides clear remediation paths
+
+### Development Workflow
+- Integrates seamlessly with npm
+- Can be automated in CI/CD pipelines
+- Supports continuous security monitoring
+
+### Cost Effectiveness
+- Free built-in security tool
+- Reduces security audit costs
+- Prevents potential security breaches
+
+## Best Practices
+
+### Regular Auditing
+- Run `npm audit` regularly during development
+- Include audit checks in your CI/CD pipeline
+- Review audit reports thoroughly
+
+### Update Strategy
+- Start with `npm audit fix` for safe updates
+- Test thoroughly after applying fixes
+- Document any forced updates
+
+### Version Control
+- Commit package.json and package-lock.json after fixes
+- Document security updates in release notes
+- Keep track of ignored vulnerabilities
+
+## Notes
+
+- Some vulnerabilities might require manual intervention
+- Not all vulnerabilities affect your specific usage
+- Consider the impact of breaking changes before forcing updates
+
+
 ## Acknowledgments / Implementations 🔬:
 
 -   This implementation of TypeScript code styling and linting was inspired by Thananjayan's article on Medium .
