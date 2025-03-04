@@ -28,6 +28,10 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: lts/*
+            - name: Install Build Tools and Python Dependencies
+              run: |
+                  apt-get update
+                  apt-get install -y build-essential python3-distutils
             - name: Cache Node.js modules
               uses: actions/cache@v4
               with:
@@ -51,13 +55,11 @@ jobs:
               if: always()
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Publish CTRF ai  Results
+            - name: Publish CTRF ai Results
               run: npm run ctrf-ai-report
               if: always()
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
             - name: Upload UI Test Report
               uses: actions/upload-artifact@v4
               if: always()
@@ -126,6 +128,10 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: lts/*
+            - name: Install Build Tools and Python Dependencies
+              run: |
+                  apt-get update
+                  apt-get install -y build-essential python3-distutils
             - name: Cache Node.js modules
               uses: actions/cache@v4
               with:
@@ -149,13 +155,11 @@ jobs:
               if: always()
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Publish CTRF ai  Results # Donr confuse zero step ai with the ctrf ai , one is wrt automation and other is ci/cd report related
+            - name: Publish CTRF ai Results
               run: npm run ctrf-ai-report
               if: always()
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
             - name: Upload UI Test Report
               uses: actions/upload-artifact@v4
               if: always()
@@ -223,6 +227,10 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: lts/*
+            - name: Install Build Tools and Python Dependencies
+              run: |
+                  apt-get update
+                  apt-get install -y build-essential python3-distutils
             - name: Cache Node.js modules
               uses: actions/cache@v4
               with:
@@ -242,13 +250,11 @@ jobs:
               if: always()
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Publish CTRF ai  Results
+            - name: Publish CTRF ai Results
               run: npm run ctrf-ai-report
               if: always()
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
             - name: Upload API Test Report
               uses: actions/upload-artifact@v4
               if: always()
@@ -280,7 +286,6 @@ jobs:
                     echo "Slack message file does not exist."
                     echo "exists=false" >> $GITHUB_ENV
                   fi
-
             - name: Read Slack Message
               id: read_slack_message
               run: |
@@ -288,7 +293,7 @@ jobs:
                     SLACK_MESSAGE=$(cat ./slack-message.txt)
                     echo "Slack Message Content:"
                     echo "$SLACK_MESSAGE"
-                    echo "SLACK_MESSAGE=$SLACK_MESSAGE" >> $GITHUB_ENV  # Set environment variable for later use
+                    echo "SLACK_MESSAGE=$SLACK_MESSAGE" >> $GITHUB_ENV
                   else
                     echo "Slack message file does not exist."
                     exit 1
@@ -296,7 +301,7 @@ jobs:
 
             # Notify Slack for API Test Results (dynamic message)
             - name: Notify Slack for API Test Results
-              if: env.exists == 'true' # Only run this step if slack-message.txt exists.
+              if: env.exists == 'true'
               uses: rtCamp/action-slack-notify@v2
               env:
                   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_GREENKART_URL }}
@@ -317,6 +322,10 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: lts/*
+            - name: Install Build Tools and Python Dependencies
+              run: |
+                  apt-get update
+                  apt-get install -y build-essential python3-distutils
             - name: Cache Node.js modules
               uses: actions/cache@v4
               with:
@@ -342,13 +351,11 @@ jobs:
               if: always()
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-            - name: Publish CTRF ai  Results
+            - name: Publish CTRF ai Results
               run: npm run ctrf-ai-report
               if: always()
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
             - name: Upload BDD Test Report
               uses: actions/upload-artifact@v4
               if: always()
