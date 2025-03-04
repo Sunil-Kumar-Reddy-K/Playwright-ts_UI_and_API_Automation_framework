@@ -21,7 +21,7 @@ jobs:
             GITHUB_RUN_ID: ${{ github.run_id }}
             GITHUB_EVENT_NAME: ${{ github.event_name }}
         container:
-            image: mcr.microsoft.com/playwright:v1.50.1-noble
+            image: mcr.microsoft.com/playwright:v1.48.1-jammy
         timeout-minutes: 60
         steps:
             - uses: actions/checkout@v4
@@ -121,7 +121,7 @@ jobs:
             GITHUB_RUN_ID: ${{ github.run_id }}
             GITHUB_EVENT_NAME: ${{ github.event_name }}
         container:
-            image: mcr.microsoft.com/playwright:v1.50.1-noble
+            image: mcr.microsoft.com/playwright:v1.48.1-jammy
         timeout-minutes: 60
         steps:
             - uses: actions/checkout@v4
@@ -315,7 +315,7 @@ jobs:
         env:
             SECRET_KEY: ${{ secrets.SECRET_KEY }}
         container:
-            image: mcr.microsoft.com/playwright:v1.50.1-noble
+            image: mcr.microsoft.com/playwright:v1.48.1-jammy
         timeout-minutes: 60
         steps:
             - uses: actions/checkout@v4
