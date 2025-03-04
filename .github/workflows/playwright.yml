@@ -28,10 +28,10 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: lts/*
-            - name: Install Build Tools
+            - name: Install Build Tools and Python Dependencies
               run: |
                   apt-get update
-                  apt-get install -y build-essential
+                  apt-get install -y build-essential python3-distutils
             - name: Cache Node.js modules
               uses: actions/cache@v4
               with:
@@ -128,10 +128,10 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: lts/*
-            - name: Install Build Tools
+            - name: Install Build Tools and Python Dependencies
               run: |
                   apt-get update
-                  apt-get install -y build-essential
+                  apt-get install -y build-essential python3-distutils
             - name: Cache Node.js modules
               uses: actions/cache@v4
               with:
@@ -227,10 +227,10 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: lts/*
-            - name: Install Build Tools
+            - name: Install Build Tools and Python Dependencies
               run: |
                   apt-get update
-                  apt-get install -y build-essential
+                  apt-get install -y build-essential python3-distutils
             - name: Cache Node.js modules
               uses: actions/cache@v4
               with:
@@ -322,10 +322,10 @@ jobs:
             - uses: actions/setup-node@v4
               with:
                   node-version: lts/*
-            - name: Install Build Tools
+            - name: Install Build Tools and Python Dependencies
               run: |
                   apt-get update
-                  apt-get install -y build-essential
+                  apt-get install -y build-essential python3-distutils
             - name: Cache Node.js modules
               uses: actions/cache@v4
               with:
