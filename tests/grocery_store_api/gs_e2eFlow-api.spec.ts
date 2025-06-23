@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import logger from "../../winston_logger.config";
 
-const baseUrl = "http://simple-grocery-store-api.online";
+const baseUrl = "https://simple-grocery-store-api.glitch.me";
 
 let cartId: string;
 let productId: string;
