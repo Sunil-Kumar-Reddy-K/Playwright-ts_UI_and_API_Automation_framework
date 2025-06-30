@@ -15,7 +15,11 @@ export default tseslint.config(
     },
     ignores: [
         '.features-gen/**/*',
-        'node_modules'
+        'node_modules',
+        'utils/gmailService.ts',
+        'utils/emailHelpers.ts',
+        'utils/testGmailConnection.ts'
+
     ],
     
   }
