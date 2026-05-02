@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx playwright-cli:*)",
+      "mcp__playwright-test__browser_type",
+      "mcp__playwright-test__browser_snapshot",
+      "mcp__playwright-test__browser_click",
+      "mcp__playwright-test__browser_run_code",
+      "mcp__playwright-test__browser_navigate",
+      "mcp__playwright-test__browser_hover",
+      "mcp__playwright-test__planner_save_plan",
+      "WebFetch(domain:www.davidmello.com)",
+      "Bash(done)"
+    ]
+  }
+}

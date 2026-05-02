@@ -85,7 +85,7 @@ $env:LOG_LEVEL = "info"; npx playwright test
 > ### With Debug Logs
 
 ```powershell
-$env:LOG_LEVEL = "debug"; npx playwright test
+$env:LOG_LEVEL = "debug"; npx playwright test --grep='@HRM' --headed --project=chromium
 ```
 
 > ### Running Specific Spec

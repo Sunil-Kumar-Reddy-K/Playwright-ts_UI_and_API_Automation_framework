@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// utils/gmailService.ts - UPDATED with correct delete permissions
 import { google } from 'googleapis';
 import { OAuth2Client } from 'google-auth-library';
 import * as fs from 'fs';
@@ -27,7 +28,7 @@ export class GmailService {
   }
 
   private initializeAuth() {
-    // Option 1: Service Account (your fixed version)
+    // Option 1: Service Account (updated scopes)
     if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH) {
       const serviceAccountKey = JSON.parse(
         fs.readFileSync(process.env.GOOGLE_SERVICE_ACCOUNT_KEY_PATH, 'utf8')
@@ -37,12 +38,14 @@ export class GmailService {
         key: serviceAccountKey.private_key,
         email: serviceAccountKey.client_email,
         scopes: [
-          'https://www.googleapis.com/auth/gmail.readonly', 
-          'https://www.googleapis.com/auth/gmail.modify'
+          'https://www.googleapis.com/auth/gmail.readonly',
+          'https://www.googleapis.com/auth/gmail.modify',
+          'https://www.googleapis.com/auth/gmail.compose',
+          'https://www.googleapis.com/auth/gmail.send'
         ]
       });
     } 
-    // Option 2: OAuth2 (recommended for testing)
+    // Option 2: OAuth2 (updated for full Gmail access)
     else {
       this.auth = new google.auth.OAuth2(
         process.env.GOOGLE_CLIENT_ID,
@@ -59,40 +62,28 @@ export class GmailService {
   }
 
   /**
-   * Extract email body from payload - Enhanced version
+   * Get list of emails with optional query
    */
-  private extractEmailBody(payload: any): { text: string; html: string } {
-    let textBody = '';
-    let htmlBody = '';
+  async getEmails(query: string = '', maxResults: number = 10): Promise<EmailMessage[]> {
+    try {
+      const response = await this.gmail.users.messages.list({
+        userId: 'me',
+        q: query,
+        maxResults: maxResults
+      });
 
-    const extractFromParts = (parts: any[]) => {
-      for (const part of parts) {
-        if (part.mimeType === 'text/plain' && part.body?.data) {
-          textBody += Buffer.from(part.body.data, 'base64').toString('utf-8');
-        } else if (part.mimeType === 'text/html' && part.body?.data) {
-          htmlBody += Buffer.from(part.body.data, 'base64').toString('utf-8');
-        } else if (part.parts) {
-          extractFromParts(part.parts);
-        }
-      }
-    };
-
-    if (payload.body?.data) {
-      const content = Buffer.from(payload.body.data, 'base64').toString('utf-8');
-      if (payload.mimeType === 'text/html') {
-        htmlBody = content;
-      } else {
-        textBody = content;
-      }
-    } else if (payload.parts) {
-      extractFromParts(payload.parts);
+      const messages = response.data.messages || [];
+      const emailPromises = messages.map((msg: any) => this.getEmailById(msg.id));
+      
+      return await Promise.all(emailPromises);
+    } catch (error) {
+      console.error('Error getting emails:', error);
+      throw error;
     }
-
-    return { text: textBody, html: htmlBody };
   }
 
   /**
-   * Get specific email by ID - Enhanced version
+   * Get specific email by ID
    */
   async getEmailById(messageId: string): Promise<EmailMessage> {
     try {
@@ -130,7 +121,40 @@ export class GmailService {
   }
 
   /**
-   * Search emails by criteria - Enhanced for your use case
+   * Extract email body from payload - Enhanced version
+   */
+  private extractEmailBody(payload: any): { text: string; html: string } {
+    let textBody = '';
+    let htmlBody = '';
+
+    const extractFromParts = (parts: any[]) => {
+      for (const part of parts) {
+        if (part.mimeType === 'text/plain' && part.body?.data) {
+          textBody += Buffer.from(part.body.data, 'base64').toString('utf-8');
+        } else if (part.mimeType === 'text/html' && part.body?.data) {
+          htmlBody += Buffer.from(part.body.data, 'base64').toString('utf-8');
+        } else if (part.parts) {
+          extractFromParts(part.parts);
+        }
+      }
+    };
+
+    if (payload.body?.data) {
+      const content = Buffer.from(payload.body.data, 'base64').toString('utf-8');
+      if (payload.mimeType === 'text/html') {
+        htmlBody = content;
+      } else {
+        textBody = content;
+      }
+    } else if (payload.parts) {
+      extractFromParts(payload.parts);
+    }
+
+    return { text: textBody, html: htmlBody };
+  }
+
+  /**
+   * Search emails by criteria
    */
   async searchEmails(criteria: {
     from?: string;
@@ -170,7 +194,171 @@ export class GmailService {
   }
 
   /**
-   * Wait for email with specific criteria - Enhanced for your reset email
+   * DELETE EMAIL - FIXED VERSION with proper error handling
+   */
+  async deleteEmail(messageId: string): Promise<boolean> {
+    try {
+      console.log(`🗑️  Attempting to delete email with ID: ${messageId}`);
+      
+      await this.gmail.users.messages.delete({
+        userId: 'me',
+        id: messageId
+      });
+      
+      console.log(`✅ Successfully deleted email: ${messageId}`);
+      return true;
+    } catch (error: any) {
+      console.error(`❌ Error deleting email ${messageId}:`, {
+        message: error.message,
+        code: error.code,
+        status: error.status,
+        cause: error.cause
+      });
+      
+      // Specific error handling
+      if (error.code === 403) {
+        console.error('🔒 PERMISSION DENIED: Your OAuth token lacks delete permissions');
+        console.error('🔧 SOLUTION: You need to regenerate your refresh token with updated scopes');
+        console.error('📋 Required scopes: gmail.modify, gmail.compose, gmail.send');
+      } else if (error.code === 404) {
+        console.error('📧 EMAIL NOT FOUND: Message may already be deleted or doesn\'t exist');
+      } else if (error.code === 401) {
+        console.error('🔑 AUTHENTICATION ERROR: Token may be expired or invalid');
+      }
+      
+      return false;
+    }
+  }
+
+  /**
+   * Alternative: Move to Trash instead of permanent delete
+   */
+  async moveToTrash(messageId: string): Promise<boolean> {
+    try {
+      console.log(`🗑️  Moving email to trash: ${messageId}`);
+      
+      await this.gmail.users.messages.trash({
+        userId: 'me',
+        id: messageId
+      });
+      
+      console.log(`✅ Successfully moved email to trash: ${messageId}`);
+      return true;
+    } catch (error: any) {
+      console.error(`❌ Error moving email to trash ${messageId}:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Restore email from trash
+   */
+  async restoreFromTrash(messageId: string): Promise<boolean> {
+    try {
+      console.log(`♻️  Restoring email from trash: ${messageId}`);
+      
+      await this.gmail.users.messages.untrash({
+        userId: 'me',
+        id: messageId
+      });
+      
+      console.log(`✅ Successfully restored email from trash: ${messageId}`);
+      return true;
+    } catch (error: any) {
+      console.error(`❌ Error restoring email from trash ${messageId}:`, error);
+      return false;
+    }
+  }
+
+  /**
+   * Bulk delete emails matching criteria
+   */
+  async bulkDeleteEmails(criteria: {
+    from?: string;
+    to?: string;
+    subject?: string;
+    olderThanDays?: number;
+    maxToDelete?: number;
+  }): Promise<{ deleted: number; failed: number }> {
+    console.log('🔄 Starting bulk delete operation...');
+    
+    let query = '';
+    if (criteria.from) query += `from:${criteria.from} `;
+    if (criteria.to) query += `to:${criteria.to} `;
+    if (criteria.subject) query += `subject:"${criteria.subject}" `;
+    if (criteria.olderThanDays) {
+      const date = new Date();
+      date.setDate(date.getDate() - criteria.olderThanDays);
+      const dateStr = date.toISOString().split('T')[0].replace(/-/g, '/');
+      query += `before:${dateStr} `;
+    }
+
+    const emails = await this.searchEmails({
+      ...criteria,
+      maxResults: criteria.maxToDelete || 50
+    });
+
+    console.log(`📧 Found ${emails.length} emails to delete`);
+
+    let deleted = 0;
+    let failed = 0;
+
+    for (const email of emails) {
+      const success = await this.deleteEmail(email.id);
+      if (success) {
+        deleted++;
+      } else {
+        failed++;
+      }
+      
+      // Small delay to avoid rate limits
+      await this.sleep(100);
+    }
+
+    console.log(`✅ Bulk delete completed: ${deleted} deleted, ${failed} failed`);
+    return { deleted, failed };
+  }
+
+  /**
+   * Mark email as read
+   */
+  async markAsRead(messageId: string): Promise<boolean> {
+    try {
+      await this.gmail.users.messages.modify({
+        userId: 'me',
+        id: messageId,
+        requestBody: {
+          removeLabelIds: ['UNREAD']
+        }
+      });
+      return true;
+    } catch (error) {
+      console.error('Error marking email as read:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Mark email as unread
+   */
+  async markAsUnread(messageId: string): Promise<boolean> {
+    try {
+      await this.gmail.users.messages.modify({
+        userId: 'me',
+        id: messageId,
+        requestBody: {
+          addLabelIds: ['UNREAD']
+        }
+      });
+      return true;
+    } catch (error) {
+      console.error('Error marking email as unread:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Wait for password reset email
    */
   async waitForPasswordResetEmail(
     recipientEmail: string,
@@ -193,7 +381,7 @@ export class GmailService {
 
         if (emails.length > 0) {
           console.log(`✅ Found ${emails.length} password reset email(s)`);
-          return emails[0]; // Return the most recent one
+          return emails[0];
         }
 
         console.log(`⏳ No password reset email found yet, waiting ${pollIntervalMs}ms...`);
@@ -210,39 +398,5 @@ export class GmailService {
 
   private sleep(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  // Keep other methods from previous version...
-  async getEmails(query: string = '', maxResults: number = 10): Promise<EmailMessage[]> {
-    return this.searchEmails({ maxResults });
-  }
-
-  async deleteEmail(messageId: string): Promise<boolean> {
-    try {
-      await this.gmail.users.messages.delete({
-        userId: 'me',
-        id: messageId
-      });
-      return true;
-    } catch (error) {
-      console.error('Error deleting email:', error);
-      return false;
-    }
-  }
-
-  async markAsRead(messageId: string): Promise<boolean> {
-    try {
-      await this.gmail.users.messages.modify({
-        userId: 'me',
-        id: messageId,
-        requestBody: {
-          removeLabelIds: ['UNREAD']
-        }
-      });
-      return true;
-    } catch (error) {
-      console.error('Error marking email as read:', error);
-      return false;
-    }
   }
 }
