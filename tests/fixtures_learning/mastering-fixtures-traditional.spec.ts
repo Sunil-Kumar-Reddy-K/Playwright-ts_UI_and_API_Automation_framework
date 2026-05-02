@@ -1,5 +1,5 @@
 import test from "../../features/steps/basepage";
-import { TodoPage } from "../../pages/todo.page";
+import { TodoPage } from "../../pages/todomvc/todo.page";
 
 test.describe("todo tests", () => {
     let todoPage: TodoPage;

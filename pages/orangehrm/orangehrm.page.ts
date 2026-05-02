@@ -1,5 +1,5 @@
 import { expect, Locator, Page } from "@playwright/test";
-import { step } from "../features/steps/basepage";
+import { step } from "../../features/steps/basepage";
 
 export class Hrmpage {
     readonly page: Page;
