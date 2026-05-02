@@ -9,14 +9,15 @@
         "prettier": "npx prettier --write .github features pages tests --ignore-path .gitignore",
         "generate-token": "npx ts-node utils/generateRefreshToken.ts",
         "test-gmailconnect": "npx ts-node utils/testGmailConnection.ts"
-
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "devDependencies": {
+        "@axe-core/playwright": "^4.11.2",
         "@eslint/js": "^9.13.0",
-        "@playwright/test": "^1.53.1",
+        "@playwright/cli": "^0.1.7",
+        "@playwright/test": "^1.59.1",
         "@types/eslint__js": "^8.42.3",
         "@types/node": "^20.14.8",
         "@types/pdf-parse": "^1.1.4",
@@ -31,6 +32,7 @@
         "typescript-eslint": "^8.10.0"
     },
     "dependencies": {
+        "@playwright/mcp": "^0.0.70",
         "@vitalets/google-translate-api": "^9.2.0",
         "dotenv": "^16.4.5",
         "google-auth-library": "^10.1.0",

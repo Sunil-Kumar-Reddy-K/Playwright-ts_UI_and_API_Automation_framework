@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx playwright:*)",
+      "Bash(npx bddgen:*)",
+      "Bash(npx prettier:*)",
+      "Bash(npm run:*)",
+      "Bash(npm install:*)",
+      "Bash(npm ci:*)",
+      "Bash(git:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(mkdir:*)",
+      "Bash(node:*)",
+      "Read",
+      "Glob",
+      "Grep",
+      "Skill(update-config:*)",
+      "WebFetch(domain:playwright.dev)",
+      "mcp__playwright__browser_close"
+    ]
+  }
+}
