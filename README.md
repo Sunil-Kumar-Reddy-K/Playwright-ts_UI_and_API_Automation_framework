@@ -1,361 +1,276 @@
-# Playwright TypeScript Automation Project [![Playwright Tests](https://github.com/Sunil-Kumar-Reddy-K/Playwright-ts_UI_and_API_Automation_framework/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/Sunil-Kumar-Reddy-K/Playwright-ts_UI_and_API_Automation_framework/actions/workflows/playwright.yml)
+# Playwright TypeScript Automation Framework
 
-This project uses **Playwright** with **TypeScript** to automate both UI and API testing for the **Green Kart** web application and the **Simple Grocery Store API**. It includes health checks, end-to-end scenarios, and comprehensive API coverage.
+[![Playwright Tests](https://github.com/Sunil-Kumar-Reddy-K/Playwright-ts_UI_and_API_Automation_framework/actions/workflows/playwright.yml/badge.svg?branch=main)](https://github.com/Sunil-Kumar-Reddy-K/Playwright-ts_UI_and_API_Automation_framework/actions/workflows/playwright.yml)
+
+A multi-paradigm test automation framework built with **Playwright** and **TypeScript**, covering UI, API, BDD, AI-driven, accessibility, and email automation testing.
+
+---
 
 ## Table of Contents
 
-1. [Project Overview](#project-overview)
-2. [Test Coverage](#test-coverage)
-    - [UI Automation](#ui-automation)
-    - [API Automation](#api-automation)
-3. [How to Run Tests](#how-to-run-tests)
-    - [Without Debug Logs](#without-debug-logs)
-    - [With Debug Logs](#with-debug-logs)
-    - [Running Specific Spec](#running-specific-spec)
-4. [Viewing Reports](#viewing-reports)
-5. [Code Styling and Linting](#code-styling-and-linting)
-    - [ESLint](#eslint)
-    - [Prettier](#prettier)
-6. [Acknowledgments](#acknowledgments)
-7. [Latest Implementations](#latest-implementations)
-8. [Slack Notification Integration](#slack-notification-integration)
-9. [Tesseract.js Integration](#tesseractjs-integration)
-    - [Installation](#installation)
-10. [How to Uninstall the Packages](#how-to-uninstall-the-packages)
-    - [Verify Uninstall](#verify-uninstall)
-    - [Clean Up](#clean-up)
-11. [The Power of --help in NPX Command](#the-power-of--help-in-npx-command)
-12. [Commands I Normally Use](#commands-i-normally-use)
+- [Framework Architecture](#framework-architecture)
+- [Test Suites](#test-suites)
+  - [UI Testing](#ui-testing)
+  - [API Testing](#api-testing)
+  - [BDD Testing](#bdd-testing)
+  - [AI-Driven Testing](#ai-driven-testing)
+  - [Accessibility Testing](#accessibility-testing)
+  - [Specialized Testing](#specialized-testing)
+- [Project Structure](#project-structure)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Running Tests](#running-tests)
+- [CI/CD Pipeline](#cicd-pipeline)
+- [Reporting](#reporting)
+- [Code Quality](#code-quality)
 
-## Project Overview
+---
 
-This project automates testing for:
+## Framework Architecture
 
-### Green Kart Web Application
-
-**Green Kart** is a web-based application that allows users to search, select, and order products. The Playwright test cases cover health checks of the application, along with end-to-end scenarios such as searching for products, selecting them, and placing orders for both single and multiple items.
-
-### Simple Grocery Store API
-
-This API, described in detail [here](https://github.com/vdespa/Postman-Complete-Guide-API-Testing/blob/main/simple-grocery-store-api.md), supports a simple grocery store's functionality. The automation scripts cover various endpoints, including status checks, cart creation, adding products, authorization, and placing orders.
-
-## Framework Approaches
-
-This framework supports three distinct approaches to running tests:
-
-1. **Regular Playwright Tests**: This is the traditional method where tests are executed using the Playwright test framework along with the Page Object Model (POM).
-
-2. **Playwright Zero-Step AI**: This approach incorporates AI-driven tests. More details regarding the implementation and usage can be found in the `documents` folder of the repository.
-
-3. **BDD Approach**: To implement Behavior Driven Development (BDD), we have followed the guidance provided in the [Playwright BDD documentation](https://vitalets.github.io/playwright-bdd/#/getting-started/index) and the [playwright-bdd-example GitHub repository](https://github.com/vitalets/playwright-bdd-example).
-
-## Winston Library Logging and Debugging
-
-This project utilizes the Winston library for logging purposes. Both `debug` and `info` level logs are supported, allowing you to capture different levels of detail based on your needs.
-
-## Test Coverage
-
-### UI Automation 👨‍💻
-
-For the Green Kart web application, the following scenarios are automated:
-
--   **Health Check**: Basic health check to ensure the application is up and running.
--   **Search and Select Product**: Search for a specific product and select it.
--   **Place Order for One Product**: Add a single product to the cart and proceed to checkout.
--   **Place Order for Multiple Products**: Add multiple products to the cart and proceed to checkout.
-
-### API Automation 🧑‍🍳
-
-For the Simple Grocery Store API, the following test scenarios are automated:
-
--   **Status Check**: Check the status of the API to ensure it is operational.
--   **Create Cart**: Create a new shopping cart.
--   **Add Product**: Add a product to the cart using its ID.
--   **Authorize**: Perform authorization to ensure secure operations.
--   **Place Order**: Place an order with the items added to the cart.
-
-## How to Run Tests
-
-> ### Without Debug Logs
-
-```powershell
-$env:LOG_LEVEL = "info"; npx playwright test
+```
+                            +-----------------------+
+                            |   playwright.config   |
+                            |   (multi-project)     |
+                            +-----------+-----------+
+                                        |
+              +------------+------------+------------+------------+
+              |            |            |            |            |
+         +----v----+  +----v----+  +----v----+  +----v----+  +----v----+
+         |   UI    |  |   API   |  |   BDD   |  |   AI    |  |  A11Y   |
+         | @UI     |  | @API    |  | @BDD    |  | @AI     |  | @A11Y   |
+         | POM     |  | request |  | Gherkin |  | ZeroStep|  | axe-core|
+         +---------+  +---------+  +---------+  +---------+  +---------+
+              |                         |
+         +----v----+              +----v----+
+         | pages/  |              |features/|
+         | (POM)   |              | (steps) |
+         +---------+              +---------+
 ```
 
-> ### With Debug Logs
+| Paradigm | Approach | Tag | CI Job |
+|---|---|---|---|
+| **UI Testing** | Page Object Model with custom fixtures | `@UI` | `ui-tests` |
+| **API Testing** | Playwright `request` fixture (no external HTTP libs) | `@API` | `api-tests` |
+| **BDD Testing** | Gherkin features with `playwright-bdd` | `@BDD` | `bdd-tests` |
+| **AI Testing** | Natural-language commands via ZeroStep `ai()` | `@AI` | `ai-tests` |
+| **Accessibility** | axe-core scans with WCAG compliance gates | `@A11Y` | — |
 
-```powershell
-$env:LOG_LEVEL = "debug"; npx playwright test --grep='@HRM' --headed --project=chromium
+> *Built with healthcare (Section 508, ADA) and insurance (EU Accessibility Act) compliance requirements in mind — industries where accessibility failures carry legal and financial risk.*
+
+---
+
+## Test Suites
+
+### UI Testing
+
+| Suite | Description | Details |
+|---|---|---|
+| [GreenKart UI](tests/green_kart_application_UI/) | E-commerce: search, cart, checkout, multi-product ordering | POM, custom fixtures, popup handling |
+| [OrangeHRM UI](tests/orangeHRM_application_UI/) | HR app: login, My Info editing, dependents management | `@step()` decorator, encrypted credentials |
+| [API Mocking](tests/api_mocking/) | Route interception: modify live HTTP responses | `page.route()`, `route.fetch()`, `route.fulfill()` |
+| [Timer Control](tests/timer_control/) | Playwright Clock API: fast-forward browser time | `page.clock.install()`, `page.clock.fastForward()` |
+| [Tesseract OCR](tests/tesseract_ocr/) | Extract text from screenshots via OCR | `Tesseract.recognize()`, canvas validation |
+
+### API Testing
+
+| Suite | Description | Details |
+|---|---|---|
+| [Grocery Store API](tests/grocery_store_api/) | Full E2E: status, cart CRUD, auth, order placement | `test.describe.serial()`, Bearer tokens, shared state |
+| [Google Translate](tests/google_translate_api/) | Third-party API integration with proxy support | `@vitalets/google-translate-api`, HTTP proxy |
+
+### BDD Testing
+
+| Suite | Description | Details |
+|---|---|---|
+| [BDD Features](features/) | Gherkin scenarios for GreenKart and Riverside | `playwright-bdd`, `createBdd()`, step definitions |
+
+### AI-Driven Testing
+
+| Suite | Description | Details |
+|---|---|---|
+| [ZeroStep AI](tests/zero_step/) | Natural-language browser automation | `ai()` fixture, combines with traditional assertions |
+
+### Accessibility Testing
+
+| Suite | Description | Details |
+|---|---|---|
+| [axe-core A11Y](tests/accessibility_axe/) | 11 modules, 59 tests — from basics to CI gates | WCAG 2.1 AA, POM integration, reporting, beyond-axe |
+
+### Specialized Testing
+
+| Suite | Description | Details |
+|---|---|---|
+| [Email Automation](tests/email_automation/) | Gmail API: send, read, extract verification codes | OAuth2, programmatic email parsing |
+| [PDF Parsing](tests/file_parser/) | Extract and validate PDF content | `pdf-parse`, metadata inspection |
+| [Fixtures Learning](tests/fixtures_learning/) | Traditional vs fixture-based test setup comparison | `base.extend<T>()`, dependency injection |
+| [Playwright v1.59](tests/playwright_v1.59_features/) | Hands-on exploration of 6 new Playwright features | Screencast API, browser bindings, async disposables |
+| [Interview Practice](tests/interview/) | Quick automation exercises for interview prep | API validation, e-commerce patterns |
+
+---
+
+## Project Structure
+
+```
+.
+├── tests/                          # All test specs (organized by feature)
+│   ├── green_kart_application_UI/  # GreenKart e-commerce UI tests
+│   ├── orangeHRM_application_UI/   # OrangeHRM HR app UI tests
+│   ├── grocery_store_api/          # REST API tests (serial E2E flow)
+│   ├── zero_step/                  # AI-driven tests (ZeroStep)
+│   ├── accessibility_axe/          # 11-module axe-core A11Y suite
+│   ├── api_mocking/                # Route interception & response mocking
+│   ├── timer_control/              # Clock API manipulation
+│   ├── tesseract_ocr/              # OCR-based visual text extraction
+│   ├── email_automation/           # Gmail API integration
+│   ├── file_parser/                # PDF content validation
+│   ├── google_translate_api/       # Translation API integration
+│   ├── fixtures_learning/          # Playwright fixtures comparison
+│   ├── playwright_v1.59_features/  # New feature exploration (6 modules)
+│   ├── interview/                  # Interview practice exercises
+│   └── others/                     # Experimental tests
+├── pages/                          # Page Object Model (grouped by app)
+│   ├── greenkart/                  # Homepage, Cart, Offers
+│   ├── orangehrm/                  # OrangeHRM page
+│   ├── riverside/                  # Riverside Score login
+│   └── todomvc/                    # TodoMVC page (fixtures learning)
+├── features/                       # BDD Gherkin features + step definitions
+│   └── steps/                      # Step definitions & base fixtures
+├── utils/                          # Gmail API helpers
+├── lib/                            # Crypto utils, Slack reporter
+├── custom_reporter/                # Custom Playwright reporters (JSON, TXT)
+├── env/                            # Environment configs (.env.local, .env.ci)
+├── .github/workflows/              # CI/CD pipeline (4 parallel jobs)
+└── playwright.config.ts            # Multi-project configuration
 ```
 
-> ### Running Specific Spec
+> Each folder contains its own `README.md` with detailed documentation.
 
-```powershell
-$env:LOG_LEVEL = "debug"; npx playwright test tests/green_kart_application_UI/gk_orderMultipleProducts.spec.ts --project=chromium --headed
+---
+
+## Tech Stack
+
+| Category | Tools |
+|---|---|
+| **Framework** | Playwright, TypeScript |
+| **Test Patterns** | Page Object Model, BDD (Gherkin), AI-driven |
+| **BDD** | playwright-bdd, Cucumber Gherkin |
+| **AI Testing** | ZeroStep (`@zerostep/playwright`) |
+| **Accessibility** | @axe-core/playwright, WCAG 2.1 AA |
+| **API Testing** | Playwright `request` fixture (built-in) |
+| **OCR** | Tesseract.js |
+| **PDF** | pdf-parse |
+| **Email** | Gmail API, OAuth2 |
+| **Logging** | Winston (debug/info levels) |
+| **Encryption** | AES-256-CBC (`lib/cryptoUtils.ts`) |
+| **CI/CD** | GitHub Actions (4 parallel jobs) |
+| **Notifications** | Slack (per test type channel) |
+| **Reporting** | HTML, Ortoni, CTRF, Custom JSON/TXT reporters |
+| **Code Quality** | ESLint (strict), Prettier |
+
+---
+
+## Getting Started
+
+```bash
+# Clone the repository
+git clone https://github.com/Sunil-Kumar-Reddy-K/Playwright-ts_UI_and_API_Automation_framework.git
+
+# Install dependencies
+npm ci
+
+# Install Playwright browsers
+npx playwright install --with-deps
+
+# Set up environment
+cp env/.env.local.example env/.env.local   # Configure your env vars
 ```
 
-## Zero-Step Integration 🤖
+---
 
-Implemented ZeroStep in this repository to enhance Playwright testing capabilities with AI functionalities. ZeroStep allows supercharge tests by utilizing AI-driven commands that can interact with web pages intelligently.
+## Running Tests
 
-For more information on how to set up ZeroStep in project, please refer to official GitHub repository: [ZeroStep GitHub Repository](https://github.com/zerostep-ai/zerostep)
+```bash
+# Run all tests
+npx playwright test
 
-## How to Run the BDD tests
+# Run by tag
+npx playwright test --grep @UI
+npx playwright test --grep @API
+npx playwright test --grep @AI
+npx playwright test --grep @A11Y
 
-```powershell
-npx bddgen --tags "@BDD"; npx playwright test --project=bdd_chromium --workers=1 --headed
+# Run BDD tests
+npx bddgen --tags "@BDD" && npx playwright test --project=bdd_chromium
+
+# Run a specific suite
+npx playwright test tests/green_kart_application_UI/ --project=chromium
+
+# Run with headed browser
+npx playwright test --grep @UI --project=chromium --headed
+
+# Run with debug mode
+npx playwright test tests/grocery_store_api/ --debug
+
+# Enable debug logging
+$env:LOG_LEVEL = "debug"; npx playwright test --grep @HRM --project=chromium
 ```
 
-## Viewing Test Reports 📂
+---
 
-After the GitHub Actions workflow runs, test reports are uploaded as an artifact named playwright-report. You can view and download the reports by navigating to the workflow run details and accessing the playwright-report artifact.
+## CI/CD Pipeline
 
-sample:
-![alt text](documents/image.png)
+GitHub Actions workflow (`.github/workflows/playwright.yml`) runs **4 parallel jobs** on every PR and on a schedule (Mon/Thu 5 AM IST):
 
-# Code styling and linting assistant
+```
+┌─────────────┬─────────────┬─────────────┬─────────────┐
+│  UI Tests   │  AI Tests   │  API Tests  │  BDD Tests  │
+│  --grep @UI │  --grep @AI │  --grep @API│  bdd_chromium│
+│  Playwright │  Playwright │  Node LTS   │  Playwright  │
+│  container  │  container  │  container  │  container   │
+└──────┬──────┴──────┬──────┴──────┬──────┴──────┬──────┘
+       └─────────────┴──────┬──────┴─────────────┘
+                     check-failures
+                     (aggregation)
+```
 
-Implemented ESLint and Prettier to ensure code quality and consistency.
+Each job:
+- Generates **CTRF reports** with AI summaries
+- Sends **Slack notifications** to dedicated channels per test type
+- Uploads **HTML reports** as artifacts (30-day retention)
 
-### ESLint 🧵
+---
 
-To see all the linting issues, run:
+## Reporting
 
-```powershell
+| Reporter | Output |
+|---|---|
+| **HTML** | `playwright-report/html-reports/` (timestamped) |
+| **Ortoni** | `playwright-report/ortoni-report/` (visual report) |
+| **CTRF** | `playwright-report/ctrf-reports/` (CI-friendly JSON) |
+| **Custom JSON** | Via `custom_reporter/json_reporter.ts` |
+| **Custom TXT** | Via `custom_reporter/txt_reporter.ts` |
+
+```bash
+# Generate CTRF summary report
+npm run ctrf-report
+```
+
+---
+
+## Code Quality
+
+```bash
+# Lint all test files
 npx eslint tests
-```
 
-Additionally, installing the Error Lens extension in your code editor will highlight errors directly in the file before even running the command.
-
-To fix the fixables we can use
-
-```powershell
+# Auto-fix linting issues
 npx eslint tests --fix
+
+# Format with Prettier
+npx prettier --write tests
 ```
 
-### Prettier 🦋
-
-To format a specific file, use:
-
-```powershell
-npx prettier tests/interview/medium.spec.ts --write
-```
-
-To format all files in the tests directory, use:
-
-```powershell
-npx prettier tests --write
-```
-
-### Playwright
-
-#### Debugging Test Discovery
-
-To debug why the tests are not being discovered::
-
-```powershell
-npx playwright test --list
-```
-
-## Slack Notification Integration 📫
-
-Slack messages have been integrated into the GitHub Actions pipeline to notify the team of test results for both UI and API tests. The Slack messages are configured to be sent to a designated channel once tests are completed, and they provide a link to the HTML reports stored in the playwright-report folder.
-
--   source of learning
-    -   from collab repo
-    -   Some YouTube videos
-
-## Tesseract.js Integration 🏜️
-
-In this project, I have integrated Tesseract.js to extract text from images using Playwright. Below are the details of the implementation process.
-
--   source of learning
-    _ letCode koushik
-    _ Some other YouTube videos
-    > ### Installation
-
-To use Tesseract.js, ensure it is installed in your project. You can add it by running the following command:
-
-```powershell
-npm i tesseract.js
-```
-
-## The Power of --help in NPX Command 💁
-
-The --help option in the npx command can provide valuable information about the available commands and their usage. For example, running npx --help will display a list of all the available npx commands and their descriptions.
-
-# Repo Maintenance 🛠️
-
-> ### How to Uninstall the packages
->
-> To uninstall the package ex: `@nut-tree-fork/nut-js`, you can use the following command in your terminal or command prompt:
-
-```powershell
-npm uninstall @nut-tree-fork/nut-js
-```
-
-> ### Verify Uninstall
-
-Verify Uninstallation: After running the command, you can check your package.json file or run the following command to ensure that the package has been removed:
-
-```powershell
-npm list @nut-tree-fork/nut-js
-```
-
-If the package is uninstalled successfully, you should see a message indicating that the package is not found.
-
-> ### Clean Up
->
-> If you want to remove any unused dependencies, you can run:
-
-```powershell
-npm prune
-```
-
-
-# npm audit Security Guide
-
-`npm audit` is a powerful security tool that automatically scans your project's dependencies for known vulnerabilities. It checks your dependency tree against the Node.js Security Platform database of known vulnerabilities.
-
-## Basic Commands
-
-### Check for Vulnerabilities
-```bash
-npm audit
-```
-This command:
-- Scans your project's dependencies
-- Returns a detailed report of found vulnerabilities
-- Provides remediation suggestions
-- Shows the path to vulnerable dependencies
-
-### Fix Vulnerabilities Automatically
-```bash
-npm audit fix
-```
-This command:
-- Automatically upgrades packages to non-vulnerable versions
-- Updates your package.json and package-lock.json
-- Only performs safe updates that don't break your existing code
-
-### Force Fix with Breaking Changes
-```bash
-npm audit fix --force
-```
-This command:
-- Installs breaking changes if required to fix vulnerabilities
-- May affect your application's functionality
-- Should be used with caution and proper testing
-
-### Generate JSON Report
-```bash
-npm audit --json
-```
-This command:
-- Outputs the audit report in JSON format
-- Useful for automated tools and CI/CD pipelines
-- Provides machine-readable vulnerability information
-
-### Produce Only the Summary
-```bash
-npm audit --summary
-```
-This command:
-- Shows a brief overview of found vulnerabilities
-- Omits detailed information about individual vulnerabilities
-- Perfect for quick security checks
-
-## Benefits of npm audit
-
-### Security Enhancement
-- Identifies known vulnerabilities in dependencies
-- Helps maintain secure applications
-- Provides early warning of security issues
-
-### Risk Management
-- Assesses the severity of vulnerabilities
-- Helps prioritize security updates
-- Provides clear remediation paths
-
-### Development Workflow
-- Integrates seamlessly with npm
-- Can be automated in CI/CD pipelines
-- Supports continuous security monitoring
-
-### Cost Effectiveness
-- Free built-in security tool
-- Reduces security audit costs
-- Prevents potential security breaches
-
-## Best Practices
-
-### Regular Auditing
-- Run `npm audit` regularly during development
-- Include audit checks in your CI/CD pipeline
-- Review audit reports thoroughly
-
-### Update Strategy
-- Start with `npm audit fix` for safe updates
-- Test thoroughly after applying fixes
-- Document any forced updates
-
-### Version Control
-- Commit package.json and package-lock.json after fixes
-- Document security updates in release notes
-- Keep track of ignored vulnerabilities
-
-## Notes
-
-- Some vulnerabilities might require manual intervention
-- Not all vulnerabilities affect your specific usage
-- Consider the impact of breaking changes before forcing updates
-
-
-## Acknowledgments / Implementations 🔬:
-
--   This implementation of TypeScript code styling and linting was inspired by Thananjayan's article on Medium .
-
-    > https://medium.com/@thananjayan1988/typescript-code-styling-and-linting-assistant-93ff67557b1c
-
--   Use the Playwright Reporter API to Create Custom Reports\*\*
-    In addition to the following medium documentation i took help of GPT to print the report in an txt file and we can find the same inside the playwright-report > custom-report
-    > https://medium.com/@eugenegronski/how-to-use-the-playwright-reporter-api-to-create-custom-reports-43de0e89cd3f
-
-## Commands I Normally Use ⌨️
-
-```powershell
-$env:LOG_LEVEL = "debug"; npx playwright test tests/playwright_utube/dynamicContent_APImocking.spec.ts --project=chromium --headed --ui
-
-$env:LOG_LEVEL = "debug"; npx eslint tests/grocery-store-api/gs_e2eFlow-api.spec.ts
-
-$env:LOG_LEVEL = "debug"; npx playwright test tests/medium/mastering-fixtures-inside.spec.ts --project=chromium --headed --workers=1
-
-$env:LOG_LEVEL = "debug"; npx playwright test tests/checkly_utube/timer_control.spec.ts --project=chromium --headed --debug
-
-$env:LOG_LEVEL = "debug"; npx playwright test tests/automation_using_tessaract_js/rs_logoRead.spec.ts --project=chromium --headed
-
-$env:ENV="local"; npx bddgen --tags "@crypto"; npx playwright test --project=bdd_chromium --workers=1 --headed
-
-$env:LOG_LEVEL = "debug"; $env:ZEROSTEP_TOKEN = "0step:2bee65c6-9cc5-4e29-8eaa-03daf7e173c3"; npx playwright test tests/zero_step/gk_happyPath.spec.ts --project=chromium --headed
-
-$env:LOG_LEVEL = "debug"; npx playwright test --grep "HRM" --project=chromium --headed
-```
-
-# Decorators
-
-> -   we can only use decorators inside a class so that makes us to only use in POM pages
->     https://www.youtube.com/watch?v=of1v9cycTdQ
-
-# Yet to Implemet in the repo ✒️
-
-> Zero_step , bdd, just started , yet to install bdd deps and add the same to readme , change the location of fixtures eetc
-
-> azure pipeline
-
-> ortoni report
-
-> .env implementation , [text](https://www.npmjs.com/package/dotenv) "https://www.youtube.com/watch?v=OpxLilD600I&ab_channel=CommitQuality"
-
-> just run one file like unit test ex crypti is "ts-node lib\cryptoUtils.ts"
-
-> ctrf- report, [text](https://ctrf.io/docs/intro) > checked for playwright and git hub
+- **ESLint**: Strict mode, `no-floating-promises: error`
+- **Prettier**: 4-space tabs, double quotes, trailing commas, semicolons
+- **TypeScript**: Strict mode, no `any` unless necessary

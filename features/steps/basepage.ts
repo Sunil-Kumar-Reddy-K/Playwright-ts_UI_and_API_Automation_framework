@@ -4,12 +4,12 @@
  * @BDD_Documentation - https://vitalets.github.io/playwright-bdd/#/writing-steps/playwright-style
  */
 // import { Page } from '@playwright/test';
-import { Homepage } from "../../pages/homepage";
-import { Cart } from "../../pages/cart";
-import { RIVERSIDE_LoginPage } from "../../pages/riverside_page";
+import { Homepage } from "../../pages/greenkart/homepage";
+import { Cart } from "../../pages/greenkart/cart";
+import { RIVERSIDE_LoginPage } from "../../pages/riverside/riverside.page";
 import { test as base, createBdd } from "playwright-bdd";
 import { aiFixture, type AiFixture } from "@zerostep/playwright";
-import { Hrmpage } from "../../pages/orangehrm.page";
+import { Hrmpage } from "../../pages/orangehrm/orangehrm.page";
 
 const test = base.extend<
     {
